@@ -153,6 +153,8 @@ namespace MindAttic.Overworld.Runtime
             Party = new Party(Content.Heroes, Content.Walls);
             // The original's own unused Belmont and girl sprite sets, selectable per hero (U.OVW-T35).
             Party.SpritePacks = Content.SpritePacks;
+            // Magic.vb's one defined spell, Flame, behind the Skill ring entry (U.OVW-T36).
+            Party.Magic = Content.Magic;
             // checkItemsInRange and checkItemPickup ran after getInput and before updateHero: the pickups step before the
             // party. The original seeded its scatter from the clock; -overworld-seed fixes it for captures.
             var seedText = ArgumentAfter(args, SeedArgument);

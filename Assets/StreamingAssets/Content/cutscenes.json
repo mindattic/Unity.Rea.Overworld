@@ -1,0 +1,6 @@
+{
+  "_source": "Cutscene.vb (compiled but unreachable; RECONSTRUCTION 18, U.OVW-T36): a record of name, title, start/end script and objective; loadCutscenes set only one, name 'Hello', and never assigned its other fields. Kept as data, empty fields and all, so the hook is not dropped; nothing here invents a title, scripts or an objective the original never gave it.",
+  "cutscenes": [
+    {"name": "Hello", "title": "", "startScript": "", "endScript": "", "objective": ""}
+  ]
+}

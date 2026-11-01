@@ -74,6 +74,12 @@ namespace MindAttic.Overworld.Core
         /// <summary>The original's unused Belmont and girl sprite sets, selectable per hero (sprite-packs.json, U.OVW-T35).</summary>
         public SpritePackData SpritePacks { get; private set; }
 
+        /// <summary>Magic.vb's five spell schools and its one defined spell, Flame (magic.json, U.OVW-T36).</summary>
+        public MagicData Magic { get; private set; }
+
+        /// <summary>Cutscene.vb's own record, "Hello" and nothing more (cutscenes.json, U.OVW-T36).</summary>
+        public CutsceneData Cutscenes { get; private set; }
+
         /// <summary>The original's own dangling references, kept faithfully (not errors): where and what.</summary>
         public IReadOnlyList<string> Warnings { get; private set; }
 
@@ -168,6 +174,8 @@ namespace MindAttic.Overworld.Core
             registry.Gamepad = GamepadData.Read(source, manifest.Text("gamepad"), errors);
             registry.Audio = AudioData.Read(source, manifest.Text("audio"), errors);
             registry.SpritePacks = SpritePackData.Read(source, manifest.Text("spritePacks"), errors);
+            registry.Magic = MagicData.Read(source, manifest.Text("magic"), errors);
+            registry.Cutscenes = CutsceneData.Read(source, manifest.Text("cutscenes"), errors);
             manifest.Done();
 
             // A pickup that opens a book by its own name ("CHANGE BOOK TO ITEM") must name a real book.

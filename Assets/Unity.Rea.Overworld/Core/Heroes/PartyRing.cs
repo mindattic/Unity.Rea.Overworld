@@ -141,6 +141,24 @@ namespace MindAttic.Overworld.Core
                     taken = true;
                     PassTurn(game, command.Player, game.Tick, events, false);
                     break;
+                case RingEntry.Skill:
+                    // Magic.vb's one defined spell, Flame (RECONSTRUCTION 18; BIBLE "Skill ring entry", U.OVW-T36): the
+                    // original's checkRingEffect left Skill doing nothing at all, same as Attack before it had one;
+                    // casting it, with enough mana, is the one this entry is evidently for.
+                    if (Magic != null)
+                    {
+                        var flame = Magic.Find("Flame");
+                        if (flame != null && hero.Mana >= flame.Cost)
+                        {
+                            hero.Mana -= flame.Cost;
+                            events.Add(new SpellCast(game.Tick, command.Player, hero.Index, flame.Name, hero.X, hero.Y, flame.Duration));
+                            events.Add(new HeroVitalsChanged(game.Tick, hero.Index, hero.Health, hero.Mana, hero.Stamina));
+                            taken = true;
+                            PassTurn(game, command.Player, game.Tick, events, true);
+                        }
+                    }
+
+                    break;
                 case RingEntry.Attack:
                     // The original's checkRingEffect left Attack and Skill doing nothing at all (RECONSTRUCTION 12.2); with
                     // a target now in range (U.OVW-T33), resolving a hit is the one it is evidently for.

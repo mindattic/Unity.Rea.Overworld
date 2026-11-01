@@ -604,6 +604,15 @@ Highlighting an entry has an effect (`checkRingEffect`): Attack shows red dots a
 Picking up in battle costs 5 percent of maximum stamina.
 Defects (BIBLE, U.OVW-T23): `checkHeroMove` mirrors the gauge from `moveDistance`, which nothing but a Ready check recomputes, so the pickup's and item's costs (and a part-charged hero's Move) are given back as the hero walks; `bNoOneReady` survives leaving battle and `checkBattleSelect` takes any full hero, adventure mode included; one `ringMode` serves turn and pulse, so each cuts the other off; `resetRing` leaves a turn under way.
 
+What the rebuild builds (U.OVW-T36; BIBLE "Skill ring entry"): Skill, left with no handler like Attack before
+U.OVW-T33, now casts Magic.vb's one defined spell, Flame (content `magic.json`, `MagicData`: the five schools sketched
+by comment, kept as a taxonomy with no spell of their own, and Flame's own cost 5, range 0.2 and duration 10 s), at
+the caster's own point — "a given point" was never given an aim in the source, so none is invented. With enough mana
+it is spent, a `SpellCast` event carries the point and duration, and the turn passes exactly as Attack's hit does;
+without enough mana, or with no `MagicData` at all (`Party.Magic` null), Skill still does nothing, as the original
+left it. What the entry offers beyond Flame is still the open question it was before this ticket. Core `MagicTests`,
+`SkillRingTests`.
+
 ### 12.4 Weapons (`Weapons.vb`)
 
 `aWeapon`: name, description, rating, slashing, piercing, blunt, durability, maxDurability, skill requirement, type (Sword, Axe, Spear, Blunt, Arrow), weight, range, and four 6-frame sprite arrays (left, right, draw-left, draw-right).
@@ -721,6 +730,11 @@ Read by `theDatabase.getArea` into a DataSet with relations AreaEvents, EventScr
 
 The compiled engine loads these tables and uses none of them (its pickups, scripts and events are hard-coded or disabled): they are the first version of the data-driven design, with the three starter items.
 
+`Item_Textures` is kept as the reference seam it already was before this ticket (U.OVW-T36; BIBLE "Unfinished hooks"):
+`WorldData.ItemTextures`, read, unique-id checked and cross-referenced by every 2006 Item (`WorldData.cs`), same as the
+rest of this table. Nothing further was needed; it is named here only so U.OVW-T36 does not have to invent a seam that
+was already whole.
+
 ### 16.2 Root `world.mdb` (the later design; 2007-03-08) — not read by any compiled code
 
 `Area`: 1 Grasslands; 2 Lowlands.
@@ -784,6 +798,13 @@ their own coloured picture, and Botherfly and Toadie (no Enemy_Images, no art at
 flagged placeholder. Landing a hit is the combat story (A29): a triggered Defensive enemy has nothing else to do, so it
 simply keeps acting Aggressive.
 
+What the rebuild keeps as a seam (U.OVW-T36; BIBLE "Unfinished hooks"): the Mechanical class and the Teleporting,
+Stationary and Swimming motions above are loaded and validated (`WorldData.EnemyClasses`/`EnemyMotions`) exactly like
+the four classes and three motions the five enemies actually use, but no enemy carries any of the four; Mechanical's
+own damage multiplier was already in Combat's class table since U.OVW-T33 ("the Mechanical class turns a blade but
+not a hammer"), now exercised directly by a Core test since nothing wields it. Nothing is invented to put a
+Teleporting, Stationary or Swimming enemy on the ground that Area_Enemies never placed one on.
+
 `Event` (area, id, name, x, y, left, right, top, bottom, scriptID): (1, 1, Poison Box, 3, 0, -0.25, 0.25, -0.1, -0.45, 1); (1, 2, Healing Box, 2, 0, -0.25, 0.25, -0.1, -0.45, 2); (1, 3, Entering Dark Woods, 4, 0, -0.25, 0, -0.1, -0.45, 3).
 `Script`: 1 Poison `CHANGE HERO HP -1` rate 0.5; 2 Heal `CHANGE HERO HP +1` 0.5; 3 Night `CHANGE TIME DAYPERIOD Night` 0.
 
@@ -845,6 +866,8 @@ by timers), `Terrain.vb` (terrain line loader), top-level `Text.vb` (`levelText`
 
 Compiled but unreachable or unfinished: events and event rendering; `renderProp` and prop tops; `playMusic`, `rndMusicPos`, `Video`; `Pause`; `showMenu`; `loadConfig`; `Cutscene` (a record with name, title, start/end script and objective; `loadCutscenes` sets one name "Hello"); `Magic` (spell types Regeneration, Destruction, Alteration, Conjuration, Alchemy; one spell "Flame", "Causes a small fire to appear at a given point", cost 5, range 0.2, duration 10 s; comments sketch Cure, Heal Light Wounds,
 Blizzard, Hurricane, Lightning, Meteor, Fast Walk, Water Walk, Summoning, necromancy, potions and enchantment); ring entries Skill and Attack; `enemyToggle`/`bEnemy`; `CHANGE ENEMY`; the Subquest script command (commented); TalkTo, GiveTo and GetItem objectives; `Equipable` items (the Rusty Sword's script fails); the `Resting` AI state; the weapon types Spear, Blunt and Arrow; wireframe, back-face culling and filter debug keys; `Make`.
+(Ring entry Attack: U.OVW-T33. Cutscene and Magic/Skill, kept as the defined seams this list calls for rather than
+dropped or invented beyond their own data: U.OVW-T36, BIBLE "Unfinished hooks".)
 
 Defects (the BIBLE says what the rebuild does about each): frame-rate-dependent movement, camera, weather and clouds (everything but animation and clock is per frame; speed doubles on a faster machine); the death soft-lock (6.5); `checkScripts` never called (9.3); the Poisoned icon using Angry frames (7); the Nitro Bean overwritten by Cheese (8.1); the Rusty Sword unusable; the Down-walk and run-animation frame counts (4.4); the clock's noon shown as AM; the mana assignment clamp (assignments clamp mana to its current value); `Experience` re-awarded every frame at the last quest (10); `getRndSingle` returns a plain 0-1 random ignoring its bounds;
 `CHANGE TIME HOUR +N` discarded; `Tab`, `Q` handled twice; Roman numerals repeat wrong values at 65 to 69 and 74 to 80 ("LV" for 65, "LXIV" for 74); `isDisplayModeOkay` uses an unassigned manager variable and forces 800 x 600; unthrottled loop (no vertical sync wait in windowed mode) with a 1-second-resolution message fade.

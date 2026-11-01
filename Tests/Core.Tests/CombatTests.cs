@@ -88,6 +88,18 @@ namespace MindAttic.Overworld.Tests
         }
 
         [Test]
+        public void TheMechanicalClassResistsAnEdgeButNotAHammerUntouchedByAnyEnemyYetKeptAsASeam()
+        {
+            // U.OVW-T36: no enemy carries the Mechanical class or art (Enemy_Class lists it with nothing shipped to use
+            // it), so Combat's own table (U.OVW-T33) is exercised here directly instead of through a living enemy.
+            var steelSword = Registry.Weapons.Weapons[0]; // rating 8, slashing 0.5, piercing 0.15, blunt 0
+            var fineAxe = Registry.Weapons.Weapons[1]; // rating 12, slashing 0.4, piercing 0, blunt 0.9
+            Assert.AreEqual(4, Combat.Damage(steelSword, "Mechanical"));
+            Assert.AreEqual(12, Combat.Damage(fineAxe, "Mechanical"));
+            Assert.Greater(Combat.Damage(fineAxe, "Mechanical"), Combat.Damage(steelSword, "Mechanical"), "a hammer suits a Magitek's armour better than an edge");
+        }
+
+        [Test]
         public void HeroDatabasesFourWeaponsResolveTheirOwnSimplerFigure()
         {
             var weapons = Registry.HeroDatabase.Weapons;

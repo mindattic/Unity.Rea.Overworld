@@ -1,0 +1,7 @@
+{
+  "_source": "Magic.vb (compiled but unreachable; RECONSTRUCTION 18, BIBLE 'Skill ring entry' open question, U.OVW-T36): the five spell schools sketched by comment and the one spell the source actually defined, Flame, kept as data so checkRingEffect's Skill entry (which did nothing at all) is not dropped. The other spells the comments only name (Cure, Heal Light Wounds, Blizzard, Hurricane, Lightning, Meteor, Fast Walk, Water Walk, Summoning, and the rest) were never given a cost, range or duration, so none is invented here; what the Skill entry offers beyond Flame stays the open question it already was.",
+  "schools": ["Regeneration", "Destruction", "Alteration", "Conjuration", "Alchemy"],
+  "spells": [
+    {"name": "Flame", "school": "Destruction", "cost": 5, "range": 0.2, "duration": 10, "description": "Causes a small fire to appear at a given point"}
+  ]
+}

@@ -22,5 +22,7 @@
   "developer": "developer.json",
   "gamepad": "gamepad.json",
   "audio": "audio.json",
-  "spritePacks": "sprite-packs.json"
+  "spritePacks": "sprite-packs.json",
+  "magic": "magic.json",
+  "cutscenes": "cutscenes.json"
 }
