@@ -102,7 +102,7 @@ namespace MindAttic.Overworld.Tests
 
             Assert.IsTrue(game.Submit(new PlaceHero(PlayerId.One, 0, wolf.X - 0.3f, wolf.Y)).Accepted); // within half
             game.Step();
-            Assert.Greater(wolf.X, x, "approached within half its range: now it moves toward the leader");
+            Assert.Less(wolf.X, x, "approached within half its range: now it moves toward the leader (left)");
         }
 
         [Test]
