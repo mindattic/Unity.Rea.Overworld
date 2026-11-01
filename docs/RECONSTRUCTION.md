@@ -729,6 +729,12 @@ The ground lines, the scenes and the NPCs' y near -0.2 make the 2007 design a si
 not the shipped engine's top-down tile grid. There is no start position, no exit or link between the two areas, and area 2 (Lowlands) has no scene, terrain or anything else.
 What the rebuild fixes of all this is the BIBLE's fixed-defects table (U.OVW-T38).
 
+What the rebuild builds on top (U.OVW-T29; BIBLE "The landscape: scenes, mountain, props"): the start area's Scenes and
+Area_Props are drawn (picture quads depth-sorted by the database's own Z), replacing the small original area's tile grid
+while they are shown. Terrain's nine ground-line segments stay data only, loaded and validated but not enforced as
+collision (the original never wired them either); Lowlands' stand-in scene and terrain load but are never seen, since no
+exit yet moves the party there.
+
 `Terrain` (areaID, id, x1, y1, x2, y2), all area 1: 1 (-1,-0.3)-(5.5,-0.3); 2 (5.5,-0.3)-(6,-0.5); 3 (6,-0.5)-(8.5,-0.5); 4 (8.5,-0.5)-(10,-0.2); 5 (10,-0.2)-(11,-0.2); 6 (11,-0.2)-(12,-0.43); 7 (12,-0.43)-(16,-0.43); 8 (0.25,-0.25)-(1,0.05); 9 (1,0.05)-(1.25,0.05).
 (The orphan `Terrain.vb` and the unused `getIntersectY` describe how they were meant to be used: the ground line a hero stands on.)
 
