@@ -380,7 +380,7 @@ namespace MindAttic.Overworld.Core
                         break;
                     case HeroState.Walking:
                         Accelerate(hero, hero.Definition.WalkSpeed, moveHeld[i]);
-                        Animate(hero, now, hero.Definition.WalkRate, Cycle(hero, Sprites.Walk), hero.Definition.WalkFrames);
+                        Animate(hero, now, hero.Definition.WalkRate, Cycle(hero, SpritesFor(hero).Walk), WalkFramesFor(hero));
                         break;
                     case HeroState.Running:
                         Accelerate(hero, hero.Definition.RunSpeed, moveHeld[i]);
