@@ -151,6 +151,8 @@ namespace MindAttic.Overworld.Runtime
             fullScreen = Button("FullScreen", "<Keyboard>/f12");
             // R (RECONSTRUCTION 6.5, U.OVW-T28): "R calls the same routine" as a completed death fade; a frmMain key too.
             resetGame = Button("ResetGame", "<Keyboard>/r");
+            // F6 (RECONSTRUCTION 4.4, U.OVW-T35): cycles the leader's sprite pack (default, Belmont, Girl); none of this is original, so there is no original key to match.
+            spritePack = Button("SpritePack", "<Keyboard>/f6");
             // 1 to 9 then 0: quick slots 0 to 9.
             for (var i = 0; i < quickKeys.Length; i++) quickKeys[i] = Button("Quick" + (i + 1) % 10, "<Keyboard>/digit" + (i + 1) % 10);
         }
@@ -187,7 +189,7 @@ namespace MindAttic.Overworld.Runtime
             left, right, up, down, run, move, point,
             motion, wheel, zoom, fast, examine, freeCamera, isometric, deisometric, strafeLeft, strafeRight, strafeUp, strafeDown,
             previousHero, nextHero, team, select, rest, confirm, previousItem, nextItem, inventory, drop, quickBar, questScreen, book, nextBook, weather, battle,
-            options, fps, pause, heroScreen, regenTest, regenTestStop, fullScreen, resetGame,
+            options, fps, pause, heroScreen, regenTest, regenTestStop, fullScreen, resetGame, spritePack,
             quickKeys[0], quickKeys[1], quickKeys[2], quickKeys[3], quickKeys[4], quickKeys[5], quickKeys[6], quickKeys[7], quickKeys[8], quickKeys[9],
         };
 
