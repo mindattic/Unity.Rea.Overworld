@@ -384,7 +384,7 @@ namespace MindAttic.Overworld.Core
                         break;
                     case HeroState.Running:
                         Accelerate(hero, hero.Definition.RunSpeed, moveHeld[i]);
-                        Animate(hero, now, hero.Definition.RunRate, Cycle(hero, Sprites.Run), hero.Definition.RunFrames);
+                        Animate(hero, now, hero.Definition.RunRate, Cycle(hero, SpritesFor(hero).Run), RunFramesFor(hero));
                         break;
                     case HeroState.Drawing:
                         DrawWeapon(hero, now);
@@ -866,7 +866,7 @@ namespace MindAttic.Overworld.Core
             if (hero.Z < 0f)
             {
                 hero.Z += Data.Fall.Rise;
-                hero.Sprite = Sprites.Halt(Facing.Left);
+                hero.Sprite = SpritesFor(hero).Halt(Facing.Left);
                 return hero.Z >= 0f;
             }
 
@@ -883,7 +883,7 @@ namespace MindAttic.Overworld.Core
             hero.DX = 0f;
             hero.DY = 0f;
             hero.Frame = 0;
-            hero.Sprite = Sprites.Stand(hero.Facing);
+            hero.Sprite = SpritesFor(hero).Stand(hero.Facing);
         }
 
         /// <summary>
