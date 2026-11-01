@@ -79,6 +79,7 @@ namespace MindAttic.Overworld.Runtime
         public const string SeedArgument = "-overworld-seed";
         public const string RegenTestArgument = "-overworld-regen-test";
         public const string FullScreenTestArgument = "-overworld-full-screen-test";
+        public const string SpritePackArgument = "-overworld-sprite-pack";
 
         public ContentRegistry Content { get; private set; }
         public GameHost Host { get; private set; }
@@ -308,7 +309,8 @@ namespace MindAttic.Overworld.Runtime
             var shown = ApplyScriptedInterface(args, game);
             var soundTested = ApplyScriptedRegenTest(args, game);
             var windowTested = ApplyScriptedFullScreenTest(args);
-            if (scripted.HasValue || scriptedView || recalled || party || vitals || rested || picked || packed || typed || quested || read || weathered || battled || shown || soundTested || windowTested || seeded || capture != null) Input.UseDevices = false;
+            var packed2 = ApplyScriptedSpritePack(args, game);
+            if (scripted.HasValue || scriptedView || recalled || party || vitals || rested || picked || packed || typed || quested || read || weathered || battled || shown || soundTested || windowTested || packed2 || seeded || capture != null) Input.UseDevices = false;
 
             // frmMain showed a random loading picture while the engine loaded; real play holds it a moment, scripted runs
             // skip it unless -overworld-loading asks for it.
