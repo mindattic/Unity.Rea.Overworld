@@ -28,6 +28,9 @@ namespace MindAttic.Overworld.Core
 
         public string ExperienceLine(int experience) =>
             string.Format(System.Globalization.CultureInfo.InvariantCulture, ExperienceText, experience);
+
+        /// <summary>Where hero.mdb's own hero, Alexander, and its equipment are shown (U.OVW-T34; BIBLE "Equipping Alexander").</summary>
+        public HudText Equipment { get; internal set; }
     }
 
     /// <summary>One row of a page of the options menu: its text and y, and what Enter on it does on the main page.</summary>
@@ -221,6 +224,7 @@ namespace MindAttic.Overworld.Core
                 Box = ReadBox(r, data),
                 Experience = ReadText(r, "experience", data, fonts),
                 ExperienceText = r.Text("experienceText"),
+                Equipment = ReadText(r, "equipment", data, fonts),
             };
             r.Check(screen.ExperienceText.Contains("{0}"), "experienceText", "must hold {0} for the experience");
             return screen;

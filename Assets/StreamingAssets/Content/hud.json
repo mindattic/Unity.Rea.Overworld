@@ -22,7 +22,8 @@
     "date": {"x": 390, "y": 25, "font": "fontCalisto", "colour": [128, 255, 255, 0]},
     "time": {"x": 390, "y": 45, "font": "fontCalisto", "colour": [128, 255, 255, 0]},
     "experience": {"x": 390, "y": 65, "font": "fontCalisto", "colour": [128, 255, 255, 0]},
-    "experienceText": "Experience: {0}"
+    "experienceText": "Experience: {0}",
+    "equipment": {"x": 40, "y": 85, "font": "fontCalisto", "colour": [128, 255, 255, 0]}
   },
   "options": {
     "_note": "Gui/Options.vb renderOptionMenu while bOptions is on (F11; Escape in the rebuild, BIBLE 'Pause'): menu.png (loaded at 256 x 256) stretched over menuWidth x menuHeight (255 x 255) at (10, 10) (its top edge's v was 2 / 255; not reproduced); 'Options' at (28, 20) in fontArialNarrow24, (255, 0, 255, 255); '>' at (50, the chosen row's y) and the page's rows at (60, y) in fontArial white. maxOptions is 3 on every page: Up and Down (once a press, optionUp / optionDown) step the cursor through rows 0 to 3, wrapping; Left goes back to the main page (the first); Enter (or the left button, actionPickup) on the main page opens the row's page, or quits on Exit. The Controls page lists keyLeft ... keyDown by their DirectInput names. The Video and Audio pages had no rows and no positions of their own (optionPos(2, n) was never set, so the cursor sat at y 0; optionPos(3, n) is past the table, so the Audio page threw every frame and froze the screen); they use the Controls page's rows here (BIBLE).",
