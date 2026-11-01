@@ -268,6 +268,12 @@ namespace MindAttic.Overworld.Core
         /// <summary>The hero <paramref name="player"/> leads.</summary>
         public Hero Leader(PlayerId player) => heroes[LeaderOf(player)];
 
+        /// <summary>An online client's screen shows <paramref name="player"/> leading hero <paramref name="index"/>, as the authority has it (<see cref="WorldMirror"/>, U.OVW-T51).</summary>
+        internal void MirrorLeader(PlayerId player, int index)
+        {
+            if (index >= 0 && index < heroes.Count) leaders[player] = index;
+        }
+
         /// <summary>What <paramref name="player"/> is holding now (nothing while its input is locked).</summary>
         public MoveInput InputOf(PlayerId player) => !Locked(player) && inputs.TryGetValue(player, out var input) ? input : default;
 

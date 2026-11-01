@@ -93,6 +93,17 @@ namespace MindAttic.Overworld.Core
             foreach (var line in t.Lines) Add(line, t.Font, t.Colour.R, t.Colour.G, t.Colour.B);
         }
 
+        /// <summary>
+        /// loadOptions' first-run message box (hud.json "welcome", RECONSTRUCTION 2.2), queued ahead of the tutorial
+        /// instead of a blocking OS dialog (U.OVW-T27; BIBLE).
+        /// </summary>
+        public void SayWelcome()
+        {
+            var w = Hud.Welcome;
+            if (w == null) return;
+            foreach (var line in w.Lines) Add(line, w.Font, w.Colour.R, w.Colour.G, w.Colour.B);
+        }
+
         public void Step(Game game, long tick, ICollection<IGameEvent> events)
         {
             // MessageHandler: show the next one once the last has moved on.

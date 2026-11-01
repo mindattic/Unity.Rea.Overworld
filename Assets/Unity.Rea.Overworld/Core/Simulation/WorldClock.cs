@@ -217,6 +217,14 @@ namespace MindAttic.Overworld.Core
         /// <summary>CHANGE LIGHT RED / GREEN / BLUE: the light is set (each minute then steps it toward the period's colour again).</summary>
         internal void SetLight(LightColour light) => Light = light;
 
+        /// <summary>An online client's screen shows the authority's time and light (<see cref="WorldMirror"/>, U.OVW-T51); the period is the one the hour is in, unannounced.</summary>
+        internal void Mirror(DateTime now, LightColour light)
+        {
+            Now = now;
+            Period = Data.PeriodAt(now.Hour);
+            Light = light;
+        }
+
         CommandResult HandleRatio(Game game, SetTimeRatio c)
         {
             if (!(c.SecondsPerMinute >= 0f) || float.IsInfinity(c.SecondsPerMinute))

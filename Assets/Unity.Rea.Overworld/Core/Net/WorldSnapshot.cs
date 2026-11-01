@@ -6,21 +6,24 @@ namespace MindAttic.Overworld.Core
 {
     /// <summary>
     /// What the one authority's game looks like at one moment, as it travels to the online peers (U.OVW-T46): the tick,
-    /// the in-game time, the weather, every hero (where it stands, its facing, mode and vitals) and every player in the
-    /// game with the hero it leads. Captured from the authority's own systems (any may be null) and read by presentation;
-    /// nothing changes a game with it.
+    /// the in-game time and light, the weather, the pause, every hero (where it stands, its facing, mode, vitals and the
+    /// pictures it shows) and every player in the game with the hero it leads and its view (camera and cursor). Captured
+    /// from the authority's own systems (any may be null); a client presents it through a <see cref="WorldMirror"/>
+    /// (U.OVW-T51). Nothing changes the authority's game with it.
     /// </summary>
     public sealed class WorldSnapshot
     {
-        /// <summary>The wire version; bytes with any other first byte are refused.</summary>
-        public const byte Version = 1;
+        /// <summary>The wire version; bytes with any other first byte are refused (2: U.OVW-T51 adds the pictures, light and views).</summary>
+        public const byte Version = 2;
 
         /// <summary>One hero as the authority has it.</summary>
         public readonly struct HeroShown
         {
-            public HeroShown(float x, float y, float z, Facing facing, HeroMode mode, int health, int mana, int stamina)
+            public HeroShown(float x, float y, float z, Facing facing, HeroMode mode, int health, int mana, int stamina,
+                string sprite = null, string weaponSprite = null, HeroStatus status = default, string statusIcon = null)
             {
                 X = x; Y = y; Z = z; Facing = facing; Mode = mode; Health = health; Mana = mana; Stamina = stamina;
+                Sprite = sprite; WeaponSprite = weaponSprite; Status = status; StatusIcon = statusIcon;
             }
 
             public float X { get; }
@@ -31,14 +34,42 @@ namespace MindAttic.Overworld.Core
             public int Health { get; }
             public int Mana { get; }
             public int Stamina { get; }
+
+            /// <summary>The hero's picture now (its animation frame), null when the authority had none.</summary>
+            public string Sprite { get; }
+
+            /// <summary>The weapon's picture now, null when none.</summary>
+            public string WeaponSprite { get; }
+
+            public HeroStatus Status { get; }
+            public string StatusIcon { get; }
         }
 
-        /// <summary>One player in the authority's game and the hero it leads (-1 when there is no party).</summary>
+        /// <summary>One player in the authority's game, the hero it leads (-1 when there is no party) and its view.</summary>
         public readonly struct PlayerShown
         {
-            public PlayerShown(PlayerId id, int leader) { Id = id; Leader = leader; }
+            public PlayerShown(PlayerId id, int leader) : this(id, leader, false, 0f, 0f, 0f, false, 0f, 0f) { }
+
+            public PlayerShown(PlayerId id, int leader, bool hasView, float cameraX, float cameraY, float cameraZ, bool freeCamera,
+                float cursorX, float cursorY)
+            {
+                Id = id; Leader = leader; HasView = hasView;
+                CameraX = cameraX; CameraY = cameraY; CameraZ = cameraZ; FreeCamera = freeCamera;
+                CursorX = cursorX; CursorY = cursorY;
+            }
+
             public PlayerId Id { get; }
             public int Leader { get; }
+
+            /// <summary>Whether the authority sent this player's view (it had a camera control).</summary>
+            public bool HasView { get; }
+
+            public float CameraX { get; }
+            public float CameraY { get; }
+            public float CameraZ { get; }
+            public bool FreeCamera { get; }
+            public float CursorX { get; }
+            public float CursorY { get; }
         }
 
         readonly List<HeroShown> heroes = new List<HeroShown>();
@@ -51,6 +82,9 @@ namespace MindAttic.Overworld.Core
 
         /// <summary>The in-game date and time (DateTime ticks; 0 when the authority has no clock).</summary>
         public long TimeTicks { get; private set; }
+
+        /// <summary>The colour the world is lit in (white when the authority has no clock).</summary>
+        public LightColour Light { get; private set; } = new LightColour(255, 255, 255);
 
         /// <summary>The weather now (Clear when the authority has none).</summary>
         public WeatherKind WeatherNow { get; private set; }
@@ -71,7 +105,11 @@ namespace MindAttic.Overworld.Core
         }
 
         /// <summary>The authority's game now. Party, clock and weather are optional.</summary>
-        public static WorldSnapshot Capture(Game game, Party party, WorldClock clock, Weather weather, int sequence)
+        public static WorldSnapshot Capture(Game game, Party party, WorldClock clock, Weather weather, int sequence) =>
+            Capture(game, party, clock, weather, null, sequence);
+
+        /// <summary>The authority's game now, with each player's view from <paramref name="view"/>. Everything but the game is optional.</summary>
+        public static WorldSnapshot Capture(Game game, Party party, WorldClock clock, Weather weather, CameraControl view, int sequence)
         {
             if (game == null) throw new ArgumentNullException(nameof(game));
             var s = new WorldSnapshot
@@ -82,24 +120,42 @@ namespace MindAttic.Overworld.Core
                 WeatherNow = weather != null ? weather.Kind : default,
                 Held = game.IsHeld,
             };
+            if (clock != null) s.Light = clock.Light;
             if (party != null)
                 foreach (var h in party.Heroes)
-                    s.heroes.Add(new HeroShown(h.X, h.Y, h.Z, h.Facing, h.Mode, h.Health, h.Mana, h.Stamina));
+                    s.heroes.Add(new HeroShown(h.X, h.Y, h.Z, h.Facing, h.Mode, h.Health, h.Mana, h.Stamina,
+                        h.Sprite, h.WeaponSprite, h.Status, h.StatusIcon));
             var ids = new List<PlayerId>(game.Players);
             ids.Sort((a, b) => a.Value.CompareTo(b.Value));
-            foreach (var id in ids) s.players.Add(new PlayerShown(id, party != null ? party.LeaderOf(id) : -1));
+            foreach (var id in ids)
+            {
+                var leader = party != null ? party.LeaderOf(id) : -1;
+                if (view == null)
+                {
+                    s.players.Add(new PlayerShown(id, leader));
+                    continue;
+                }
+
+                var v = view.For(id);
+                s.players.Add(new PlayerShown(id, leader, true, v.Camera.X, v.Camera.Y, v.Camera.Z, v.Camera.FreeCamera,
+                    v.Cursor.X, v.Cursor.Y));
+            }
+
             return s;
         }
 
         public byte[] Encode()
         {
-            using (var stream = new MemoryStream(64 + heroes.Count * 32))
+            using (var stream = new MemoryStream(64 + heroes.Count * 64 + players.Count * 32))
             using (var w = new BinaryWriter(stream))
             {
                 w.Write(Version);
                 w.Write(Sequence);
                 w.Write(Tick);
                 w.Write(TimeTicks);
+                w.Write(Light.R);
+                w.Write(Light.G);
+                w.Write(Light.B);
                 w.Write((int)WeatherNow);
                 w.Write(Held);
                 w.Write(heroes.Count);
@@ -113,6 +169,10 @@ namespace MindAttic.Overworld.Core
                     w.Write(h.Health);
                     w.Write(h.Mana);
                     w.Write(h.Stamina);
+                    w.Write(h.Sprite ?? string.Empty);
+                    w.Write(h.WeaponSprite ?? string.Empty);
+                    w.Write((int)h.Status);
+                    w.Write(h.StatusIcon ?? string.Empty);
                 }
 
                 w.Write(players.Count);
@@ -120,6 +180,14 @@ namespace MindAttic.Overworld.Core
                 {
                     w.Write(p.Id.Value);
                     w.Write(p.Leader);
+                    w.Write(p.HasView);
+                    if (!p.HasView) continue;
+                    w.Write(p.CameraX);
+                    w.Write(p.CameraY);
+                    w.Write(p.CameraZ);
+                    w.Write(p.FreeCamera);
+                    w.Write(p.CursorX);
+                    w.Write(p.CursorY);
                 }
 
                 w.Flush();
@@ -142,23 +210,41 @@ namespace MindAttic.Overworld.Core
                         Sequence = r.ReadInt32(),
                         Tick = r.ReadInt64(),
                         TimeTicks = r.ReadInt64(),
+                        Light = new LightColour(r.ReadByte(), r.ReadByte(), r.ReadByte()),
                         WeatherNow = (WeatherKind)r.ReadInt32(),
                         Held = r.ReadBoolean(),
                     };
+                    if (s.TimeTicks < DateTime.MinValue.Ticks || s.TimeTicks > DateTime.MaxValue.Ticks) return null;
                     var heroCount = r.ReadInt32();
                     if (heroCount < 0 || heroCount > 1024) return null;
                     for (var i = 0; i < heroCount; i++)
                         s.heroes.Add(new HeroShown(r.ReadSingle(), r.ReadSingle(), r.ReadSingle(), (Facing)r.ReadInt32(), (HeroMode)r.ReadInt32(),
-                            r.ReadInt32(), r.ReadInt32(), r.ReadInt32()));
+                            r.ReadInt32(), r.ReadInt32(), r.ReadInt32(), OrNull(r.ReadString()), OrNull(r.ReadString()),
+                            (HeroStatus)r.ReadInt32(), OrNull(r.ReadString())));
                     var playerCount = r.ReadInt32();
                     if (playerCount < 0 || playerCount > 1024) return null;
                     for (var i = 0; i < playerCount; i++)
-                        s.players.Add(new PlayerShown(new PlayerId(r.ReadInt32()), r.ReadInt32()));
+                    {
+                        var id = new PlayerId(r.ReadInt32());
+                        var leader = r.ReadInt32();
+                        if (!r.ReadBoolean())
+                        {
+                            s.players.Add(new PlayerShown(id, leader));
+                            continue;
+                        }
+
+                        s.players.Add(new PlayerShown(id, leader, true, r.ReadSingle(), r.ReadSingle(), r.ReadSingle(), r.ReadBoolean(),
+                            r.ReadSingle(), r.ReadSingle()));
+                    }
+
                     return stream.Position == stream.Length ? s : null;
                 }
             }
             catch (EndOfStreamException) { return null; }
             catch (IOException) { return null; }
+            catch (FormatException) { return null; }
         }
+
+        static string OrNull(string value) => string.IsNullOrEmpty(value) ? null : value;
     }
 }

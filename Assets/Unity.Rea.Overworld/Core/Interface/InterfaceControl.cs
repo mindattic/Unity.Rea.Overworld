@@ -137,6 +137,9 @@ namespace MindAttic.Overworld.Core
         /// <summary>bPause: the whole game is paused.</summary>
         public bool Paused { get; private set; }
 
+        /// <summary>An online client's screen shows the authority's pause (<see cref="WorldMirror"/>, U.OVW-T51).</summary>
+        internal void MirrorPaused(bool paused) => Paused = paused;
+
         public InterfaceControl Install(Game game)
         {
             if (game == null) throw new ArgumentNullException(nameof(game));

@@ -87,6 +87,12 @@
     "markerScale": 0.02,
     "nameScale": 0.007
   },
+  "welcome": {
+    "_note": "Root.loadOptions, first run only (RECONSTRUCTION 2.2): a message box 'Starting for the first time . . .' + newline + 'Welcome and beware!' when HKCU\\Software\\MindAttic\\Overhead cannot be read. Fixed: shown through the same message board as the tutorial (fontArial white) instead of a blocking OS dialog, so play is never interrupted (BIBLE, U.OVW-T27).",
+    "font": "fontArial",
+    "colour": [255, 255, 255],
+    "lines": ["Starting for the first time . . .", "Welcome and beware!"]
+  },
   "tutorial": {
     "_note": "Root.sayTutorial, at start and on Reset: these 88 lines queued as messages in fontArial white, the blanks spacing them out. The original's 'INSERT - Toggle INVENTORY' named the wrong key (Insert recalls the console's last script; Delete opens the pack): it says DELETE here (BIBLE).",
     "font": "fontArial",

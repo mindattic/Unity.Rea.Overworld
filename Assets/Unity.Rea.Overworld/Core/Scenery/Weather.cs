@@ -115,6 +115,9 @@ namespace MindAttic.Overworld.Core
             return this;
         }
 
+        /// <summary>An online client's screen shows the authority's weather (<see cref="WorldMirror"/>, U.OVW-T51).</summary>
+        internal void Mirror(WeatherKind kind) => Kind = kind;
+
         CommandResult HandleCycle(Game game, CycleWeather c) => Change(game, c.Player, Data.Weather.After(Kind));
 
         CommandResult HandleSet(Game game, SetWeather c) => Change(game, c.Player, c.Kind);

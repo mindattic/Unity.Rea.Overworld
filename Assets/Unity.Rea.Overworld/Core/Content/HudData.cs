@@ -728,6 +728,7 @@ namespace MindAttic.Overworld.Core
             data.Messages = tuning;
             ReadInterface(root, data, fonts);
             root.Check(data.Tutorial == null || data.Tutorial.Lines.Count <= tuning.MaxMessages, "tutorial", "must fit the message queue (maxMessages)");
+            root.Check(data.Welcome == null || data.Welcome.Lines.Count <= tuning.MaxMessages, "welcome", "must fit the message queue (maxMessages)");
             root.Done();
             return data;
         }

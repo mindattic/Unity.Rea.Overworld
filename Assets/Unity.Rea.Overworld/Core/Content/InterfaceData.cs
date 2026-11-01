@@ -159,6 +159,14 @@ namespace MindAttic.Overworld.Core
         public IReadOnlyList<string> Lines { get; internal set; }
     }
 
+    /// <summary>The first-run welcome (Root.loadOptions, RECONSTRUCTION 2.2), queued ahead of the tutorial when no window settings were found.</summary>
+    public sealed class WelcomeDefinition
+    {
+        public HudFont Font { get; internal set; }
+        public TextColour Colour { get; internal set; }
+        public IReadOnlyList<string> Lines { get; internal set; }
+    }
+
     /// <summary>The loading pictures (frmMain.Startup) and how long the rebuild holds one.</summary>
     public sealed class LoadingDefinition
     {
@@ -189,6 +197,7 @@ namespace MindAttic.Overworld.Core
         public Cursor2DDefinition Cursor2D { get; internal set; }
         public HoverNameDefinition HoverName { get; internal set; }
         public TutorialDefinition Tutorial { get; internal set; }
+        public WelcomeDefinition Welcome { get; internal set; }
         public LoadingDefinition Loading { get; internal set; }
 
         static ScreenPicture ReadBox(ContentReader r, HudData data)
@@ -344,6 +353,17 @@ namespace MindAttic.Overworld.Core
             };
             tutorial.Check(data.Tutorial.Lines.Count > 0, "lines", "must hold the tutorial's lines");
             tutorial.Done();
+
+            var welcome = root.Section("welcome");
+            var welcomeColour = TimeData.ReadBytes(welcome, "colour", 3, "an [r, g, b] colour of three whole numbers from 0 to 255");
+            data.Welcome = new WelcomeDefinition
+            {
+                Font = ReadFont(welcome, fonts),
+                Colour = welcomeColour == null ? new TextColour(255, 255, 255, 255) : new TextColour(255, welcomeColour[0], welcomeColour[1], welcomeColour[2]),
+                Lines = welcome.Texts("lines"),
+            };
+            welcome.Check(data.Welcome.Lines.Count > 0, "lines", "must hold the welcome's lines");
+            welcome.Done();
 
             var loading = root.Section("loading");
             var pictures = loading.Texts("pictures");
