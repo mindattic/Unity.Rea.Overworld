@@ -57,6 +57,12 @@ namespace MindAttic.Overworld.Runtime
         public Label HeroTimeLabel { get; private set; }
         public Label HeroExperienceLabel { get; private set; }
 
+        /// <summary>hero.mdb's own hero, Alexander, and the weapon equipped on him (U.OVW-T34; BIBLE "Equipping Alexander").</summary>
+        public Label HeroEquipmentLabel { get; private set; }
+
+        /// <summary>Alexander's equipment (null: the line is not shown).</summary>
+        public Equipment Equipment { get; set; }
+
         /// <summary>The turn bars by slot: each fill and the bar over it (hidden beyond the heroes shown).</summary>
         public IReadOnlyList<(VisualElement Fill, VisualElement Frame)> TurnBars => turnBars;
 
@@ -129,6 +135,7 @@ namespace MindAttic.Overworld.Runtime
                 HeroDateLabel = NewLabel(heroLayer, "hero date", Hud.HeroScreenDate);
                 HeroTimeLabel = NewLabel(heroLayer, "hero time", Hud.HeroScreenTime);
                 HeroExperienceLabel = NewLabel(heroLayer, "hero experience", h.Experience);
+                HeroEquipmentLabel = NewLabel(heroLayer, "hero equipment", h.Equipment);
                 heroLayer.style.display = DisplayStyle.None;
 
                 Cursor2D = NewPicture(cursorLayer, "cursor 2D", Hud.Cursor2D.Picture);
@@ -283,9 +290,26 @@ namespace MindAttic.Overworld.Runtime
             HeroDateLabel.text = Clock != null ? Clock.DateText : string.Empty;
             HeroTimeLabel.text = Clock != null ? Clock.TimeAndPeriodText : string.Empty;
             HeroExperienceLabel.text = h.ExperienceLine(Party != null ? Party.Experience : 0);
+            HeroEquipmentLabel.text = EquipmentLine();
             Place(HeroDateLabel, Hud.HeroScreenDate.X, Hud.HeroScreenDate.Y);
             Place(HeroTimeLabel, Hud.HeroScreenTime.X, Hud.HeroScreenTime.Y);
             Place(HeroExperienceLabel, h.Experience.X, h.Experience.Y);
+            Place(HeroEquipmentLabel, h.Equipment.X, h.Equipment.Y);
+        }
+
+        /// <summary>
+        /// hero.mdb's own hero, Alexander, with the weapon equipped on him and the empty armour and relic slots
+        /// (U.OVW-T34; BIBLE "Equipping Alexander": the original never gave any of them an item).
+        /// </summary>
+        string EquipmentLine()
+        {
+            var alexander = Equipment?.Hero;
+            if (alexander == null) return string.Empty;
+            var weapon = Equipment.WeaponOf(interfacePlayer);
+            return alexander.Name + "  HP " + alexander.Health + "/" + alexander.MaxHealth +
+                   "  STR " + alexander.Strength + "  AGI " + alexander.Agility + "  INT " + alexander.Intelligence + "  SPD " + alexander.Speed +
+                   "   Weapon: " + (weapon != null ? weapon.Name + " (" + weapon.Durability + "/" + weapon.MaxDurability + ")" : "none") +
+                   "   Head: none  Body: none  Arms: none  Feet: none  Relic: none";
         }
 
         /// <summary>checkCursorOverHero: the marker and name over the first hero the world cursor is on, unless it leads.</summary>

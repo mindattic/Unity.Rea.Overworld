@@ -246,6 +246,8 @@ namespace MindAttic.Overworld.Runtime
             Hud.ShowBook(Books, PlayerId.One);
             Hud.ShowConsole(Scripts, PlayerId.One);
             Hud.ShowInterface(Interface, PlayerId.One, Content.View.TeamButton);
+            // Alexander, on the hero screen (U.OVW-T34).
+            Hud.Equipment = Equipment;
             // renderCursor left the world cursor out under the 2D arrow (the open panel, the buttons) and while a target was chosen.
             World.CursorHidden = () =>
             {
