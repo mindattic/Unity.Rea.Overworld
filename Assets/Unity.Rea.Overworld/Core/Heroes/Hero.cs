@@ -134,6 +134,12 @@ namespace MindAttic.Overworld.Core
         public float WeaponDurability { get; internal set; }
 
         /// <summary>
+        /// The alternate sprite pack this hero draws with (U.OVW-T35), or null for the default (Chrono's own, every hero
+        /// drew with before this ticket). "Belmont" and "Girl" are the original's own unused sets, selectable per hero.
+        /// </summary>
+        public string SpritePackName { get; internal set; }
+
+        /// <summary>
         /// The weapon frame drawn over the hero (renderWeapon): its draw or battle-stance frame in step with the hero's own,
         /// or null (texBlank) while it is in any other state.
         /// </summary>
