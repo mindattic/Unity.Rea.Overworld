@@ -233,13 +233,19 @@ namespace MindAttic.Overworld.Tests
         public void ThePauseHoldsWhatTheOriginalsPauseHeldAndTheDrawGoesOn()
         {
             Assert.Greater(game.Advance(1.0), 0);
+
+            // A hero under way: the arrow held exactly as HeroInput sends it every frame, so it is still down
+            // (ApplyInput skipped while paused, RECONSTRUCTION 5.6) once the game is unpaused below.
+            Submit(new SetMoveInput(PlayerId.One, MoveInput.Arrows(right: true)));
+            Steps(1);
+            Assert.AreEqual(HeroState.Walking, chrono.State);
+            Assert.Greater(chrono.DX, 0f, "under way before the pause");
+
             Submit(new TogglePause(PlayerId.One));
             Assert.IsTrue(ui.Paused);
             Assert.IsTrue(game.IsHeld);
 
             // updateHero sat inside 'If Not bPause': a hero under way does not move.
-            chrono.State = HeroState.Walking;
-            chrono.DX = 0.003f;
             var x = chrono.X;
             var tick = game.Tick;
             messages.Add("hello", Hud.Font("fontArial"), 255, 255, 255);

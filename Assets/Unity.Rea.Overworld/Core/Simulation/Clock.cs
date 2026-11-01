@@ -40,13 +40,21 @@ namespace MindAttic.Overworld.Core
         public float Alpha => (float)(accumulator / Clock.TickSeconds);
 
         /// <summary>Adds elapsed seconds and returns how many ticks to run now.</summary>
-        public int Advance(double elapsedSeconds)
+        public int Advance(double elapsedSeconds) => Advance(elapsedSeconds, uncapped: false);
+
+        /// <summary>
+        /// Adds elapsed seconds and returns how many ticks to run now. <paramref name="uncapped"/> skips the stall
+        /// cap (U.OVW-T57): while the game is held, a tick only runs the light work that "went on in the draw"
+        /// (BIBLE Pause row) and the original never throttled oneFrameRender at all (RECONSTRUCTION 2.4), so a long
+        /// pause has nothing to spiral and should still land on the real tick, not be dropped like an unpaused stall.
+        /// </summary>
+        public int Advance(double elapsedSeconds, bool uncapped)
         {
             if (double.IsNaN(elapsedSeconds) || elapsedSeconds < 0) elapsedSeconds = 0;
             accumulator += elapsedSeconds;
             // The epsilon absorbs binary rounding so sixty 1/60 s frames are exactly sixty ticks.
             int ticks = (int)(accumulator / Clock.TickSeconds + 1e-9);
-            if (ticks > maxTicks)
+            if (!uncapped && ticks > maxTicks)
             {
                 ticks = maxTicks;
                 accumulator = 0; // dropped the backlog

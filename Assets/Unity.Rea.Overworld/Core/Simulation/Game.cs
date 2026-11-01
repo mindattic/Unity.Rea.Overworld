@@ -94,10 +94,15 @@ namespace MindAttic.Overworld.Core
         /// <summary>True while <see cref="Held"/> says the game is paused; systems read it in their step.</summary>
         public bool IsHeld => Held != null && Held();
 
-        /// <summary>Feeds real elapsed time; runs however many whole ticks it adds up to. Returns the ticks run.</summary>
+        /// <summary>
+        /// Feeds real elapsed time; runs however many whole ticks it adds up to. Returns the ticks run. While held
+        /// (<see cref="IsHeld"/>) the stall cap is skipped (U.OVW-T57): a held tick only runs the light "goes on in
+        /// the draw" work (the clock, messages and the rest the Pause row keeps), so there is nothing to spiral and a
+        /// long pause still lands on the real tick instead of losing the backlog the way an unpaused stall does.
+        /// </summary>
         public int Advance(double elapsedSeconds)
         {
-            int ticks = stepper.Advance(elapsedSeconds);
+            int ticks = stepper.Advance(elapsedSeconds, uncapped: IsHeld);
             for (int i = 0; i < ticks; i++) Step();
             return ticks;
         }
