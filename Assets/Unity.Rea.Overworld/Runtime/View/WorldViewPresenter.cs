@@ -108,6 +108,23 @@ namespace MindAttic.Overworld.Runtime
             Refresh();
         }
 
+        /// <summary>The death fade whose black-out overrides the clock's and the sleep's light (null: never faded).</summary>
+        public GameOver GameOver { get; private set; }
+
+        /// <summary>Which player's fade is shown (one screen, one player; <see cref="PlayerId.One"/> by default).</summary>
+        public PlayerId FadingPlayer { get; set; } = PlayerId.One;
+
+        /// <summary>
+        /// Fades the world to black by <paramref name="gameOver"/>'s count for <see cref="FadingPlayer"/> from now on:
+        /// while it is fading, the ambient colour is (fadeOut, fadeOut, fadeOut) in place of the clock's and sleep's light
+        /// (Lights.GameOver, RECONSTRUCTION 6.5, U.OVW-T28); the HUD is not faded.
+        /// </summary>
+        public void FadeBy(GameOver gameOver)
+        {
+            GameOver = gameOver;
+            Refresh();
+        }
+
         /// <summary>Draws <paramref name="party"/>'s heroes from now on, placed between their last two ticks of <paramref name="source"/>.</summary>
         public void Follow(Party party, Game source)
         {
@@ -541,10 +558,17 @@ namespace MindAttic.Overworld.Runtime
                 new Vector3(cam.PreviousX, cam.PreviousY, cam.PreviousZ), new Vector3(cam.X, cam.Y, cam.Z), alpha);
             Camera.transform.localRotation = Quaternion.identity;
 
-            if (Daylight != null || Sleep != null)
+            if (Daylight != null || Sleep != null || GameOver != null)
             {
                 var light = Daylight != null ? Daylight.Light : new LightColour(255, 255, 255);
                 if (Sleep != null) light = Sleep.Lit(light);
+                if (GameOver != null)
+                {
+                    // Core.GameOver.FadeStart (255): the property here is named the same as the type, so it is spelled out.
+                    var fade = (byte)Mathf.Clamp(GameOver.FadeOutOf(FadingPlayer), 0, 255);
+                    if (fade < 255) light = new LightColour(fade, fade, fade);
+                }
+
                 material.color = new Color32(light.R, light.G, light.B, 255);
             }
 

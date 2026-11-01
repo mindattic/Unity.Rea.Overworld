@@ -42,6 +42,7 @@ namespace MindAttic.Overworld.Runtime
         InputAction options, fps, pause, heroScreen;
         InputAction regenTest, regenTestStop;
         InputAction fullScreen;
+        InputAction resetGame;
 
         /// <summary>The window's saved width, height, depth and mode (RECONSTRUCTION 2.2, U.OVW-T27); null reads no F12 key.</summary>
         public WindowSettings Window { get; set; }
@@ -147,6 +148,8 @@ namespace MindAttic.Overworld.Runtime
             regenTestStop = Button("RegenTestStop", "<Keyboard>/f8");
             // F12 (RECONSTRUCTION 2.2, U.OVW-T27): another frmMain-style key, read the same as weather's W.
             fullScreen = Button("FullScreen", "<Keyboard>/f12");
+            // R (RECONSTRUCTION 6.5, U.OVW-T28): "R calls the same routine" as a completed death fade; a frmMain key too.
+            resetGame = Button("ResetGame", "<Keyboard>/r");
             // 1 to 9 then 0: quick slots 0 to 9.
             for (var i = 0; i < quickKeys.Length; i++) quickKeys[i] = Button("Quick" + (i + 1) % 10, "<Keyboard>/digit" + (i + 1) % 10);
         }
@@ -183,7 +186,7 @@ namespace MindAttic.Overworld.Runtime
             left, right, up, down, run, move, point,
             motion, wheel, zoom, fast, examine, freeCamera, isometric, deisometric, strafeLeft, strafeRight, strafeUp, strafeDown,
             previousHero, nextHero, team, select, rest, confirm, previousItem, nextItem, inventory, drop, quickBar, questScreen, book, nextBook, weather, battle,
-            options, fps, pause, heroScreen, regenTest, regenTestStop, fullScreen,
+            options, fps, pause, heroScreen, regenTest, regenTestStop, fullScreen, resetGame,
             quickKeys[0], quickKeys[1], quickKeys[2], quickKeys[3], quickKeys[4], quickKeys[5], quickKeys[6], quickKeys[7], quickKeys[8], quickKeys[9],
         };
 
@@ -254,6 +257,8 @@ namespace MindAttic.Overworld.Runtime
             if (UseDevices && !consoleWasOpen && regenTestStop.WasPressedThisFrame()) Game.Submit(new StopRegenTest(Player));
             // F12 (RECONSTRUCTION 2.2, U.OVW-T27): infrastructure, not game state, so it never goes through Core (SessionAudio's precedent).
             if (UseDevices && !consoleWasOpen && fullScreen.WasPressedThisFrame()) Window?.ToggleFullScreen();
+            // R (RECONSTRUCTION 6.5, U.OVW-T28): "R calls the same routine" as a completed death fade.
+            if (UseDevices && !consoleWasOpen && resetGame.WasPressedThisFrame()) Game.Submit(new ResetGame(Player));
             // J was a frmMain key too: the gamepad off and on (U.OVW-US-A21).
             if (UseDevices && !consoleWasOpen) JoystickKey();
             // The developer tools' frmMain keys (U.OVW-T47): with the console shut and the game not paused.
