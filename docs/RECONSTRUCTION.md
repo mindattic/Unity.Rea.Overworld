@@ -522,6 +522,12 @@ Commented-out sample scripts record the intended vocabulary: `CHANGE HERO Health
 `loadEvents(0)` loads area 0's events from `data\world.mdb` (rectangles with a script), but `checkEvents` is commented out in `updateHero` and `renderEvents` in the frame. Events never fire in the shipped build. When enabled, a hero whose centre is inside the rectangle
 writes "name : scriptName" at (100,100) and runs the script each frame.
 
+What the rebuild builds (U.OVW-T30; BIBLE "Events"): standing inside an event box runs its script, once on entry and
+again every the script's rate while the leader stays inside (0: once only), not every frame as the dead `checkEvents`
+would have — the rate is the 2007 database's own schema the dead code never read. Only the playable world's own events
+run (the Poison Box, the Healing Box, Entering Dark Woods); the 2006 engine database's three events and scripts stay a
+reference record, exactly as the compiled engine (which never ran them either) left them.
+
 ## 10. Quests (`Quests.vb`, `QuestScreen.vb`)
 
 `anObjectiveType`: MoveTo, TalkTo, GiveTo, GetItem (only MoveTo is evaluated). A quest has Exp, text, status (Inactive, Active, Failed, Success), start/end script (all empty) and objectives. Completion is by walking: the hero point (x + heroSize/2, y - heroSize/3) within `Range` of the objective on both axes.
