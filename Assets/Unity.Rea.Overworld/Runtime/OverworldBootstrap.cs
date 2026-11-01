@@ -150,6 +150,8 @@ namespace MindAttic.Overworld.Runtime
             var args = Environment.GetCommandLineArgs();
             var game = new Game();
             Party = new Party(Content.Heroes, Content.Walls);
+            // The original's own unused Belmont and girl sprite sets, selectable per hero (U.OVW-T35).
+            Party.SpritePacks = Content.SpritePacks;
             // checkItemsInRange and checkItemPickup ran after getInput and before updateHero: the pickups step before the
             // party. The original seeded its scatter from the clock; -overworld-seed fixes it for captures.
             var seedText = ArgumentAfter(args, SeedArgument);

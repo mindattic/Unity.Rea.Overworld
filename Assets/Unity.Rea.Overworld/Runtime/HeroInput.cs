@@ -262,6 +262,13 @@ namespace MindAttic.Overworld.Runtime
             if (UseDevices && !consoleWasOpen && fullScreen.WasPressedThisFrame()) Window?.ToggleFullScreen();
             // R (RECONSTRUCTION 6.5, U.OVW-T28): "R calls the same routine" as a completed death fade.
             if (UseDevices && !consoleWasOpen && resetGame.WasPressedThisFrame()) Game.Submit(new ResetGame(Player));
+            // F6 (U.OVW-T35): cycles the leader's sprite pack among the default, Belmont and Girl.
+            if (UseDevices && !consoleWasOpen && Party != null && spritePack.WasPressedThisFrame())
+            {
+                var leader = Party.Leader(Player);
+                var next = leader.SpritePackName == null ? "Belmont" : leader.SpritePackName == "Belmont" ? "Girl" : null;
+                Game.Submit(new SelectSpritePack(Player, leader.Index, next));
+            }
             // J was a frmMain key too: the gamepad off and on (U.OVW-US-A21).
             if (UseDevices && !consoleWasOpen) JoystickKey();
             // The developer tools' frmMain keys (U.OVW-T47): with the console shut and the game not paused.
