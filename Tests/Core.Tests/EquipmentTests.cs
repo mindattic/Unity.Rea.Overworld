@@ -59,14 +59,18 @@ namespace MindAttic.Overworld.Tests
         }
 
         [Test]
-        public void CyclingWrapsBothWaysAndIsPerPlayer()
+        public void CyclingWrapsAroundAllFourWeapons()
         {
             var start = equipment.WeaponOf(PlayerId.One).Name;
             Assert.IsTrue(game.Submit(new CycleEquippedWeapon(PlayerId.One, 1)).Accepted);
             Assert.AreNotEqual(start, equipment.WeaponOf(PlayerId.One).Name);
 
-            for (var i = 0; i < 4; i++) game.Submit(new CycleEquippedWeapon(PlayerId.One, 1));
-            Assert.AreEqual(start, equipment.WeaponOf(PlayerId.One).Name, "four more steps the same way, having gone five in all, is back where it started (5 weapons... four, so back after 4 from here)");
+            // Three more steps the same way visits the remaining two weapons and arrives back at the start (four in all).
+            for (var i = 0; i < 3; i++) game.Submit(new CycleEquippedWeapon(PlayerId.One, 1));
+            Assert.AreEqual(start, equipment.WeaponOf(PlayerId.One).Name, "a full cycle of the four weapons returns to the start");
+
+            Assert.IsTrue(game.Submit(new CycleEquippedWeapon(PlayerId.One, -1)).Accepted);
+            Assert.AreNotEqual(start, equipment.WeaponOf(PlayerId.One).Name, "stepping back leaves the last weapon, not the start");
         }
 
         [Test]
