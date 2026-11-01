@@ -110,3 +110,4 @@ updated: 2026-10-23
 | U.OVW-T57 | 2026-10-31 | fix | open | InterfaceTests.ThePauseHoldsWhatTheOriginalsPauseHeldAndTheDrawGoesOn expects game.Advance(1.0) to return 59-60 ticks, but FixedStepper's default DefaultMaxTicksPerAdvance=10 caps any single Advance call at 10 ticks: the test fails deterministically on current main (pre-existing, found incidentally while running the full Core.Tests suite for U.OVW-T26; not caused by it, no file overlap) | — |
 | U.OVW-T58 | 2026-10-31 | chore | closed | Add WorldMirror.cs, WorldMirror.cs.meta; Update hud.json, HudData.cs, InterfaceData.cs, Party.cs, InterfaceControl.cs, WorldSnapshot.cs, Weather.cs, MessageBoard.cs, WorldClock.cs, USER_STORIES.md | — |
 | U.OVW-T59 | 2026-10-31 | chore | closed | Add WindowSettings.cs, WindowSettings.cs.meta; Update HeroInput.cs, OverworldBootstrap.cs, InterfaceTests.cs | — |
+| U.OVW-T60 | 2026-10-31 | chore | closed | Update WindowSettings.cs, BIBLE.md, RECONSTRUCTION.md | — |

@@ -104,6 +104,12 @@ Every file of both trees was compared by content (not just name), plus the ZIP a
 - **F12** stops the loop and sets `toggleScreen`; `frmMain` flips `isWindowMode` and restarts the engine (`GoTo theStart`).
   **Escape** quits.
 
+What the rebuild builds (U.OVW-T27; BIBLE "Settings"): the same four values, kept in a MindAttic profile's settings.json
+instead of the registry (`Profiles.Current.Settings.Game["window"]`), round-tripped the same way; the welcome goes through
+the message board instead of a blocking dialog; F12 toggles in place without reloading the scene, so the game is never
+lost (the ticket's own requirement, a deliberate departure from restarting the whole engine); an invalid depth is
+corrected to 32 instead of an exception box.
+
 ### 2.3 Start-up (`frmMain.Startup`, `Engine.initDevice`)
 
 1. `loadOptions`. Show a random loading picture `gfx\gui\load\load640_N.jpg`, N = 1 to 12 (640 x 480), as the form background.
