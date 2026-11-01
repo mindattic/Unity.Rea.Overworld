@@ -895,7 +895,7 @@ namespace MindAttic.Overworld.Core
         {
             hero.DX = 0f;
             hero.DY = 0f;
-            hero.Sprite = hero.Laying ? Sprites.Sleep(hero.Facing) : Sprites.Kneel(hero.Facing);
+            hero.Sprite = hero.Laying ? SpritesFor(hero).Sleep(hero.Facing) : SpritesFor(hero).Kneel(hero.Facing);
             if (!hero.Laying) return;
 
             var rest = Data.Rest;

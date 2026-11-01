@@ -216,7 +216,7 @@ namespace MindAttic.Overworld.Core
             hero.DX = 0f;
             hero.DY = 0f;
             var d = hero.Definition;
-            Animate(hero, now, d.DrawRate, Sprites.Draw(hero.Facing), d.DrawFrames);
+            Animate(hero, now, d.DrawRate, SpritesFor(hero).Draw(hero.Facing), DrawFramesFor(hero));
             if (hero.Frame < d.DrawFrames) return;
             hero.Frame = random.Next(0, d.BattleFrames + 1);
             hero.State = HeroState.Battle;
