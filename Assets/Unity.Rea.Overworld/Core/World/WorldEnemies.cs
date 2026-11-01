@@ -34,6 +34,7 @@ namespace MindAttic.Overworld.Core
         internal int Frame;
         internal double LastFrameTime;
         internal bool FacingLeft;
+        internal double LastAttackTime = double.NegativeInfinity;
     }
 
     /// <summary>
@@ -53,6 +54,11 @@ namespace MindAttic.Overworld.Core
     {
         public const float WalkRate = 0.1f;
         public const int WalkFrameCount = 4;
+
+        /// <summary>How close an acting enemy must be to land a hit (U.OVW-T33: "being attacked"), and how often while it stays there (the Poison Box's own rate, 0.5 s).</summary>
+        public const float ContactRange = 0.1f;
+
+        public const float AttackRate = 0.5f;
 
         readonly List<EnemyView> enemies = new List<EnemyView>();
         readonly Party party;
