@@ -121,7 +121,7 @@ namespace MindAttic.Overworld.Tests
             Assert.IsNotNull(hit, "an EnemyHit event was raised");
             Assert.AreEqual(wolf.Id, hit.EnemyId);
             Assert.Less(wolf.Health, healthBefore);
-            Assert.AreEqual(healthBefore - hit.Damage, wolf.Health);
+            Assert.AreEqual(Math.Max(0, healthBefore - hit.Damage), wolf.Health, "clamped at 0, a one-hit kill for the Fine Axe against a 6-HP Werelynx");
             Assert.AreEqual(fullDurability - 1f, chrono.WeaponDurability);
         }
 
