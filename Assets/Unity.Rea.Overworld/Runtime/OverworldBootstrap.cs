@@ -107,6 +107,7 @@ namespace MindAttic.Overworld.Runtime
         public AreaEvents AreaEvents { get; private set; }
         public WorldNpcs Npcs { get; private set; }
         public WorldEnemies Enemies { get; private set; }
+        public Equipment Equipment { get; private set; }
 
         public const string OptionsArgument = "-overworld-options";
         public const string HeroScreenArgument = "-overworld-hero-screen";
@@ -205,6 +206,8 @@ namespace MindAttic.Overworld.Runtime
             Enemies = new WorldEnemies(Content.PlayableWorld, Party).Install(game);
             // Attacking resolves against a world enemy, a world-level system Party has no reference of its own to (U.OVW-T33).
             Party.FindEnemyInRange = Enemies.NearestInRange;
+            // hero.mdb's own hero, Alexander, and the four weapons he can be equipped with (RECONSTRUCTION 16.3, U.OVW-T34).
+            Equipment = new Equipment(Content.HeroDatabase).Install(game);
             // loadOptions' first-run message box, queued ahead of the tutorial (RECONSTRUCTION 2.2, U.OVW-T27).
             if (Window.FirstRun) Messages.SayWelcome();
             // Engine's start-up queued the tutorial last, once everything had loaded.
