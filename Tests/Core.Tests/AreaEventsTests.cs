@@ -39,7 +39,7 @@ namespace MindAttic.Overworld.Tests
             party = new Party(Registry.Heroes, null, new Random(5));
             var messages = new MessageBoard(Registry.Hud);
             clock = new WorldClock(Registry.Time, Registry.Heroes.Locomotion.GameSpeed, messages);
-            scripts = new ScriptInterpreter(Registry.Scripts, party, null) { Clock = clock, Messages = messages }.Install(game);
+            scripts = new ScriptInterpreter(Registry.Scripts, party, new Inventory()) { Clock = clock, Messages = messages }.Install(game);
             party.Install(game);
             clock.Install(game);
             new AreaEvents(Registry.PlayableWorld, party, scripts).Install(game);
