@@ -223,6 +223,8 @@ namespace MindAttic.Overworld.Runtime
             // The later world design (U.OVW-T29): the start area's landscape scenes and placed props, static.
             World.ShowLandscape(Content.PlayableWorld, Content.PlayableWorld?.Start?.AreaId ?? 1);
             World.ShowPickups(Pickups);
+            // The Peasant Woman and the Magitek Armor (U.OVW-T31).
+            World.ShowNpcs(Npcs);
             World.ShowWeather(Weather, game);
             World.ShowClouds(Clouds, game);
             Hud = HudPresenter.Create(Content.Hud, Clock, Messages);

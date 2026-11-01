@@ -669,6 +669,12 @@ namespace MindAttic.Overworld.Runtime
 
             RefreshDrops();
 
+            foreach (var kv in npcRenderers)
+            {
+                SetTexture(kv.Value, kv.Key.Sprite);
+                kv.Value.enabled = View.Camera.InRange(kv.Key.X, kv.Key.Y) && HasTexture(kv.Value);
+            }
+
             if (Party != null) Poses = View.Poses(Party, game != null ? game.Alpha : 1f);
 
             var order = View.BackToFront(Poses);
