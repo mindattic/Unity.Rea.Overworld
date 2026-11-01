@@ -1207,6 +1207,19 @@ namespace MindAttic.Overworld.Runtime
             return true;
         }
 
+        /// <summary>Applies <c>-overworld-sprite-pack &lt;name|off&gt;</c> (U.OVW-T35): gives the leader that pack ("Belmont" or "Girl"), or "off" clears it back to the default; true when given.</summary>
+        bool ApplyScriptedSpritePack(string[] args, Game game)
+        {
+            var name = ArgumentAfter(args, SpritePackArgument);
+            if (name == null) return false;
+            var leader = Party.Leader(PlayerId.One);
+            var pack = string.Equals(name, "off", StringComparison.OrdinalIgnoreCase) ? null : name;
+            var result = game.Submit(new SelectSpritePack(PlayerId.One, leader.Index, pack));
+            if (result.Accepted) Debug.Log("Unity.Overworld: scripted sprite pack " + (pack ?? "(default)") + ", " + leader.Name + " showing " + leader.Sprite);
+            else Debug.LogError("Unity.Overworld: " + SpritePackArgument + " was refused: " + result.Reason);
+            return true;
+        }
+
         /// <summary>Reads <c>kind[,seconds]</c>.</summary>
         public static bool TryWeather(string text, out WeatherKind kind, out float seconds)
         {
