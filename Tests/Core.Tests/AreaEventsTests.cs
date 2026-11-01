@@ -102,9 +102,13 @@ namespace MindAttic.Overworld.Tests
         public void EnteringDarkWoodsTurnsNightOnceNotEveryTick()
         {
             var box = Find("Entering Dark Woods");
+            var script = Registry.PlayableWorld.FindScript(box.ScriptId);
+            Console.WriteLine($"box X={box.X} Y={box.Y} L={box.Left} R={box.Right} T={box.Top} B={box.Bottom} scriptId={box.ScriptId} script={script?.Text} rate={script?.Rate}");
             Assert.AreNotEqual("Night", clock.Period.Name);
             PlaceLeaderIn(box);
+            Console.WriteLine($"chrono at ({chrono.X},{chrono.Y}) inside={AreaEvents.Contains(box, chrono.X, chrono.Y)}");
             Steps(1);
+            Console.WriteLine($"period now {clock.Period.Name}");
             Assert.AreEqual("Night", clock.Period.Name);
 
             // Setting the period back to Day and staying inside does not flip it again (rate 0: once on entry only).
