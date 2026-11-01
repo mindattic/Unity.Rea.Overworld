@@ -29,7 +29,7 @@ namespace MindAttic.Overworld.Core
         /// <summary>True once <see cref="State"/> Defensive has been approached within half its range and turned aggressive (RECONSTRUCTION 16.2 "Enemy AI states").</summary>
         internal bool Triggered;
 
-        internal float StandLeft, StandRight;
+        internal string StandLeft, StandRight;
         internal IReadOnlyList<string> WalkFrames;
         internal int Frame;
         internal double LastFrameTime;

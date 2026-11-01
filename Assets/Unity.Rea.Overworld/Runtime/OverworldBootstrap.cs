@@ -106,6 +106,7 @@ namespace MindAttic.Overworld.Runtime
         public GameOver GameOver { get; private set; }
         public AreaEvents AreaEvents { get; private set; }
         public WorldNpcs Npcs { get; private set; }
+        public WorldEnemies Enemies { get; private set; }
 
         public const string OptionsArgument = "-overworld-options";
         public const string HeroScreenArgument = "-overworld-hero-screen";
@@ -200,6 +201,8 @@ namespace MindAttic.Overworld.Runtime
             AreaEvents = new AreaEvents(Content.PlayableWorld, Party, Scripts).Install(game);
             // Area_Npcs placed in the start area (RECONSTRUCTION 16.2, U.OVW-T31): the Peasant Woman and the Magitek Armor.
             Npcs = new WorldNpcs(Content.PlayableWorld, Content.PlayableWorld?.Start?.AreaId ?? 1).Install(game);
+            // The five data-defined enemies, placed and moved by their own state (RECONSTRUCTION 16.2, U.OVW-T32).
+            Enemies = new WorldEnemies(Content.PlayableWorld, Party).Install(game);
             // loadOptions' first-run message box, queued ahead of the tutorial (RECONSTRUCTION 2.2, U.OVW-T27).
             if (Window.FirstRun) Messages.SayWelcome();
             // Engine's start-up queued the tutorial last, once everything had loaded.
@@ -225,6 +228,8 @@ namespace MindAttic.Overworld.Runtime
             World.ShowPickups(Pickups);
             // The Peasant Woman and the Magitek Armor (U.OVW-T31).
             World.ShowNpcs(Npcs);
+            // The five data-defined enemies (U.OVW-T32).
+            World.ShowEnemies(Enemies);
             World.ShowWeather(Weather, game);
             World.ShowClouds(Clouds, game);
             Hud = HudPresenter.Create(Content.Hud, Clock, Messages);

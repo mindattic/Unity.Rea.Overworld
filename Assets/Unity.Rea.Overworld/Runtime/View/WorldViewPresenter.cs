@@ -270,6 +270,38 @@ namespace MindAttic.Overworld.Runtime
             Refresh();
         }
 
+        /// <summary>The same 48 x 48 picture size as the NPCs' own (RECONSTRUCTION 16.2); <see cref="EnemyRecord"/> names no size of its own.</summary>
+        public const float EnemyWidth = 0.144f;
+
+        public const float EnemyHalfHeight = 0.072f;
+
+        readonly List<KeyValuePair<EnemyView, MeshRenderer>> enemyRenderers = new List<KeyValuePair<EnemyView, MeshRenderer>>();
+
+        /// <summary>The placed enemies drawn (null: none).</summary>
+        public WorldEnemies Enemies { get; private set; }
+
+        /// <summary>
+        /// Draws <paramref name="enemies"/> from now on (U.OVW-T32): each one an NPC-size quad of its current picture,
+        /// moved and re-textured every frame, after the pickups and before the heroes, within the camera's render range.
+        /// </summary>
+        public void ShowEnemies(WorldEnemies enemies)
+        {
+            Enemies = enemies;
+            if (enemies != null && enemyRenderers.Count == 0)
+            {
+                var root = new GameObject("Enemies").transform;
+                root.SetParent(transform, false);
+                foreach (var enemy in enemies.Enemies)
+                {
+                    var r = NewRenderer("Enemy " + enemy.Id + " " + enemy.Name, Quad(EnemyWidth, EnemyHalfHeight), enemy.Sprite, PickupsOrder - 1, root);
+                    r.transform.localPosition = new Vector3(enemy.X, enemy.Y, 0f);
+                    enemyRenderers.Add(new KeyValuePair<EnemyView, MeshRenderer>(enemy, r));
+                }
+            }
+
+            Refresh();
+        }
+
         readonly List<MeshRenderer> dropRenderers = new List<MeshRenderer>();
         Transform dropRoot;
 
@@ -671,6 +703,13 @@ namespace MindAttic.Overworld.Runtime
 
             foreach (var kv in npcRenderers)
             {
+                SetTexture(kv.Value, kv.Key.Sprite);
+                kv.Value.enabled = View.Camera.InRange(kv.Key.X, kv.Key.Y) && HasTexture(kv.Value);
+            }
+
+            foreach (var kv in enemyRenderers)
+            {
+                kv.Value.transform.localPosition = new Vector3(kv.Key.X, kv.Key.Y, 0f);
                 SetTexture(kv.Value, kv.Key.Sprite);
                 kv.Value.enabled = View.Camera.InRange(kv.Key.X, kv.Key.Y) && HasTexture(kv.Value);
             }
