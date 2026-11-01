@@ -41,12 +41,20 @@ namespace MindAttic.Overworld.Online
 
         private bool _joined;
         private Func<ICommand, bool> _forward;
+        private WorldMirror _mirror;
+        private OverworldWorldSync _sync;
 
         /// <summary>Server: the authority this player's commands go to. Null on a client.</summary>
         public OverworldPeer Authority { get; private set; }
 
         /// <summary>Owning client: the screen whose commands this player carries to the server. Null elsewhere.</summary>
         public OverworldPeer Screen { get; private set; }
+
+        /// <summary>
+        /// Owning client: what draws the authority's <see cref="WorldSnapshot"/>s on this screen (U.OVW-T51; null on the
+        /// server, or before <see cref="Screen"/>'s party exists).
+        /// </summary>
+        public WorldMirror Mirror => _mirror;
 
         /// <summary>The player this seat plays as in the authority's game (player 0, none, until seated).</summary>
         public PlayerId PlayerId => IsSeated ? OverworldPeer.PlayerOf(Seat) : PlayerId.None;
@@ -97,6 +105,9 @@ namespace MindAttic.Overworld.Online
                 {
                     _forward = SendCommand;
                     Screen.Game.Forward = _forward;
+                    // U.OVW-T51: this screen's own game is frozen while remote (GameHost steps nothing for it), so what
+                    // it draws comes from the authority's snapshots instead, through a WorldMirror.
+                    if (Screen.Party != null) _mirror = new WorldMirror(Screen.Party, Screen.Clock, Screen.Weather, Screen.Clouds, Screen.View, Screen.Interface);
                 }
             }
         }
@@ -112,12 +123,35 @@ namespace MindAttic.Overworld.Online
             }
 
             if (Screen != null && Screen.Game.Forward == _forward) Screen.Game.Forward = null;
+            if (_sync != null) _sync.SnapshotReceived -= OnSnapshot;
 
             Authority = null;
             Screen = null;
             _forward = null;
             _joined = false;
+            _mirror = null;
+            _sync = null;
         }
+
+        /// <summary>
+        /// Owning client, each frame: finds the session's <see cref="OverworldWorldSync"/> once it has spawned (a client
+        /// may join before the server's world sync does) and, while subscribed, moves the scenery between snapshots
+        /// (<see cref="WorldMirror.Animate"/>; rain and clouds are not carried by a snapshot).
+        /// </summary>
+        private void Update()
+        {
+            if (_mirror == null) return;
+            if (_sync == null)
+            {
+                _sync = OverworldWorldSync.For(Session);
+                if (_sync != null) _sync.SnapshotReceived += OnSnapshot;
+            }
+
+            _mirror.Animate(Time.unscaledDeltaTime);
+        }
+
+        /// <summary>Shows a newer snapshot: this seat (once the server has seated it) drawn as this screen's own player.</summary>
+        private void OnSnapshot(WorldSnapshot snapshot) => _mirror.Present(snapshot, PlayerId, OverworldPeer.LocalPlayer);
 
         // Runs on the server for every Send: the bytes are this seat's, whatever player id the client put in them.
         private void OnSend(byte[] command)

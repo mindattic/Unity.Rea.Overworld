@@ -14,13 +14,17 @@ namespace MindAttic.Overworld.Online
     /// </summary>
     public sealed class OverworldPeer
     {
-        public OverworldPeer(Game game, Party party = null, WorldClock clock = null, Weather weather = null, GameHost host = null)
+        public OverworldPeer(Game game, Party party = null, WorldClock clock = null, Weather weather = null, GameHost host = null,
+            CameraControl view = null, Clouds clouds = null, InterfaceControl interfaceControl = null)
         {
             Game = game ?? throw new ArgumentNullException(nameof(game));
             Party = party;
             Clock = clock;
             Weather = weather;
             Host = host;
+            View = view;
+            Clouds = clouds;
+            Interface = interfaceControl;
         }
 
         public Game Game { get; }
@@ -31,6 +35,15 @@ namespace MindAttic.Overworld.Online
         /// <summary>What steps <see cref="Game"/> on this peer (null when nothing does).</summary>
         public GameHost Host { get; }
 
+        /// <summary>The authority's camera and cursor per player, captured into each snapshot (U.OVW-T51; null: not captured).</summary>
+        public CameraControl View { get; }
+
+        /// <summary>A client's own screen's clouds, moved by its <see cref="WorldMirror"/> between snapshots (U.OVW-T51; null: not moved).</summary>
+        public Clouds Clouds { get; }
+
+        /// <summary>A client's own screen's interface, so its <see cref="WorldMirror"/> can mirror the authority's pause (U.OVW-T51; null: not shown).</summary>
+        public InterfaceControl Interface { get; }
+
         /// <summary>The player this screen's own controls play as: the original's one player.</summary>
         public static PlayerId LocalPlayer => PlayerId.One;
 
@@ -40,8 +53,8 @@ namespace MindAttic.Overworld.Online
         /// </summary>
         public static PlayerId PlayerOf(int seat) => new PlayerId(seat + 1);
 
-        /// <summary>The authority's game now, as it travels to the peers.</summary>
-        public WorldSnapshot Capture(int sequence) => WorldSnapshot.Capture(Game, Party, Clock, Weather, sequence);
+        /// <summary>The authority's game now, as it travels to the peers, with every player's camera and cursor (U.OVW-T51).</summary>
+        public WorldSnapshot Capture(int sequence) => WorldSnapshot.Capture(Game, Party, Clock, Weather, View, sequence);
     }
 
     /// <summary>
@@ -67,7 +80,8 @@ namespace MindAttic.Overworld.Online
             var bootstrap = UnityEngine.Object.FindAnyObjectByType<OverworldBootstrap>();
             if (bootstrap == null || bootstrap.Host == null || bootstrap.Host.Game == null) return null;
             if (cached == null || cached.Game != bootstrap.Host.Game)
-                cached = new OverworldPeer(bootstrap.Host.Game, bootstrap.Party, bootstrap.Clock, bootstrap.Weather, bootstrap.Host);
+                cached = new OverworldPeer(bootstrap.Host.Game, bootstrap.Party, bootstrap.Clock, bootstrap.Weather, bootstrap.Host,
+                    bootstrap.Control, bootstrap.Clouds, bootstrap.Interface);
             return cached;
         }
     }

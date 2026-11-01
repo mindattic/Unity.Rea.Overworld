@@ -105,14 +105,30 @@ Tests/
     The server decodes them as the sender's seat, whatever id the bytes name, refuses anything malformed, and submits
     them. The authority's own commands (join, leave, load) and the scripted runs' are never sent.
   - *State back for presentation.* `OverworldWorldSync` (spawned by key, `overworld:world`, when a server's session
-    starts) sends the game 20 times a second as a Core `WorldSnapshot` (the tick, the clock, the weather, the hold,
-    every hero's place, facing, mode and vitals, every player's leader), which every peer keeps as `Latest`. Drawing a
-    client's whole screen from the snapshot (its world view and HUD reading `Latest` instead of its own held game) is
-    the next step.
+    starts) sends the game 20 times a second as a Core `WorldSnapshot` (the tick, the clock, its light, the weather,
+    the hold, every hero's place, facing, mode, vitals and pictures, and every player's leader and view: camera,
+    free-camera and cursor, `OverworldPeer.View`), which every peer keeps as `Latest` and raises `SnapshotReceived`
+    with.
+  - *Drawing it (U.OVW-T51).* A client's own game is frozen (`Game.IsRemote`: `GameHost` steps nothing for it, and its
+    `OverworldPlayer` forwards its commands instead of applying them), so what its screen shows comes from the
+    authority's snapshots instead of its own held game. Core's `WorldMirror` is that presentation: `Present` writes a
+    snapshot's heroes straight onto the screen's own `Party` (place, facing, mode, vitals, pictures, drawn there at
+    once, nothing to ease from), mirrors the clock's time and light, the weather and the hold, and, for the seat this
+    screen's connection carries, mirrors its leader and its camera and cursor onto the screen's own player
+    (`PlayerId.One`, so the HUD and camera read exactly as local play's do); `Animate` moves the rain and clouds at
+    the 60 Hz tick between snapshots (scenery a snapshot does not carry, and the original moved every frame it was not
+    paused). The owning client's `OverworldPlayer` builds one once its screen's party exists, finds the session's
+    `OverworldWorldSync` once it has spawned (a client may seat before the server's world sync does) and feeds it
+    every `SnapshotReceived`, so joining is "my own game's party, lit and weathered by the one I joined, standing
+    where theirs stands" with no further wiring. Core `WorldMirror` has no test of its own yet (every piece it
+    composes — `Party.MirrorLeader`, `WorldClock.Mirror`, `Weather.Mirror`, `InterfaceControl.MirrorPaused`,
+    `WorldSnapshot`'s own encode and decode — is `dotnet test`ed already); the whole pipeline, host to a client's own
+    `Party`, is `Tests/Online`'s own `TheClientsScreen_DrawsTheAuthoritysHeroesThroughItsWorldMirror`.
   - *Bots and tests.* `OverworldBot` is the game's `[NetBotDriver]` (`-bot A`): it waits for its seat, holds an arrow
     and passes once the authority has walked its hero. `Tests/Online` runs on the kit's `NetSessionTest` (a host and a
-    client: seats, forwarding as the sender's seat, refused bytes, snapshots, leaving) and `NetBotTest` (a dedicated
-    server and two bots joining by code). The wire formats and the forwarding are `dotnet test`ed (`NetWireTests`).
+    client: seats, forwarding as the sender's seat, refused bytes, snapshots, leaving, and the client's own screen
+    drawn by its `WorldMirror`) and `NetBotTest` (a dedicated server and two bots joining by code). The wire formats
+    and the forwarding are `dotnet test`ed (`NetWireTests`).
 
 ## Decisions beyond the original
 

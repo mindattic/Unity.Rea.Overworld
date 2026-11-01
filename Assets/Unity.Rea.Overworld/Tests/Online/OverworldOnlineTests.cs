@@ -189,6 +189,46 @@ namespace MindAttic.Overworld.Online.Tests
         }
 
         [UnityTest]
+        public IEnumerator TheClientsScreen_DrawsTheAuthoritysHeroesThroughItsWorldMirror()
+        {
+            // U.OVW-T51: the client's own game is frozen (IsRemote) while online, so what its screen shows comes from
+            // the authority's snapshots through OverworldPlayer's own WorldMirror, not from stepping its own party.
+            OverworldPlayer ann = null, annOnHost = null;
+            yield return Seated((c, h) => { ann = c; annOnHost = h; });
+
+            Assert.That(ann.Mirror, Is.Not.Null, "the owning client builds a WorldMirror once its screen's party exists");
+            OverworldWorldSync.Serve(Server, OnlinePrefabs.WorldSync);
+
+            var hostHero = OnlinePrefabs.LeaderOf(hostGame, ann.PlayerId);
+            var start = new Vector2(hostHero.X, hostHero.Y);
+            for (var i = 0; i < 60; i++)
+            {
+                hostGame.Game.Submit(new SetMoveInput(ann.PlayerId, MoveInput.Arrows(right: true)));
+                yield return null;
+            }
+
+            hostGame.Game.Submit(new SetMoveInput(ann.PlayerId, default));
+            Assert.That(Vector2.Distance(new Vector2(hostHero.X, hostHero.Y), start), Is.GreaterThan(0.01f), "the authority's own hero moved");
+
+            // Ann's own seat is shown as this screen's own player (PlayerId.One), exactly as local play always is
+            // (WorldMirror's own contract): her screen never joined any other seat into its local game.
+            yield return WaitUntil(() => ann.Mirror.Presented > 0, "the client never presented a snapshot");
+            yield return WaitUntil(
+                () =>
+                {
+                    var hero = clientGame.Party.Leader(PlayerId.One);
+                    return Vector2.Distance(new Vector2(hero.X, hero.Y), new Vector2(hostHero.X, hostHero.Y)) < 0.01f;
+                },
+                () =>
+                {
+                    var hero = clientGame.Party.Leader(PlayerId.One);
+                    return "the client's own leader never matched the authority's hero (at " + hero.X + ", " + hero.Y + ")";
+                });
+
+            Assert.That(clientGame.Party.LeaderOf(PlayerId.One), Is.EqualTo(hostGame.Party.LeaderOf(ann.PlayerId)), "Ann's leader is mirrored onto this screen's own player");
+        }
+
+        [UnityTest]
         public IEnumerator APlayerWhoLeaves_IsTakenOutOfTheAuthoritysGame_AndTheirScreenPlaysLocallyAgain()
         {
             OverworldPlayer ann = null, annOnHost = null;
