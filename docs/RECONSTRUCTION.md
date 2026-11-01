@@ -760,6 +760,12 @@ encounters story (U.OVW-T32), not this one.
 4 Red Slime 5, 0.004, 0.7, Defensive, Walking, Paranormal; 5 Toadie 4, 0.05, 0.4, Aggressive, Hopping, Reptile. `Enemy_Class`: Paranormal, Animal, Reptile, Insect, Mechanical. `Enemy_Motion`: Walking, Flying, Hopping, Teleporting, Stationary, Swimming.
 `Enemy_State`: Passive, Aggressive, Afraid, Defensive. `Area_Enemies` and `Enemy_Images`: empty tables (their columns: enemy id, x, y, z; and stand/walk/attack/hurt left/right image names).
 
+What the rebuild builds (U.OVW-T32; BIBLE "Enemies met"): all five placed along the Grasslands (the owner's own x, since
+Area_Enemies gives none) and moved by the row above's own state rule; Werelynx draws the catman set, Blue and Red Slime
+their own coloured picture, and Botherfly and Toadie (no Enemy_Images, no art at all) the plain slime picture as a
+flagged placeholder. Landing a hit is the combat story (A29): a triggered Defensive enemy has nothing else to do, so it
+simply keeps acting Aggressive.
+
 `Event` (area, id, name, x, y, left, right, top, bottom, scriptID): (1, 1, Poison Box, 3, 0, -0.25, 0.25, -0.1, -0.45, 1); (1, 2, Healing Box, 2, 0, -0.25, 0.25, -0.1, -0.45, 2); (1, 3, Entering Dark Woods, 4, 0, -0.25, 0, -0.1, -0.45, 3).
 `Script`: 1 Poison `CHANGE HERO HP -1` rate 0.5; 2 Heal `CHANGE HERO HP +1` 0.5; 3 Night `CHANGE TIME DAYPERIOD Night` 0.
 
