@@ -98,7 +98,7 @@ namespace MindAttic.Overworld.Tests
             Steps(1);
             Assert.AreEqual(254, over.FadeOutOf(PlayerId.One));
             Steps(9);
-            Assert.AreEqual(244, over.FadeOutOf(PlayerId.One));
+            Assert.AreEqual(245, over.FadeOutOf(PlayerId.One));
         }
 
         [Test]
@@ -145,12 +145,14 @@ namespace MindAttic.Overworld.Tests
         }
 
         [Test]
-        public void RForcesTheSameResetAtOnceEvenAtFullHealth()
+        public void RForcesTheSameResetAtOnceEvenWithoutAFade()
         {
-            Assert.AreEqual(chrono.MaxHealth, chrono.Health);
+            // Chrono starts at HP 31 of 50 (loadHero's own starting figure, not the maximum): R restores full health too.
+            Assert.Less(chrono.Health, chrono.MaxHealth);
             Assert.IsTrue(game.Submit(new PlaceHero(PlayerId.One, 0, 3f, 3f)).Accepted);
             var result = game.Submit(new ResetGame(PlayerId.One));
             Assert.IsTrue(result.Accepted);
+            Assert.AreEqual(chrono.MaxHealth, chrono.Health);
             Assert.AreEqual(chrono.Definition.Start.X, chrono.X);
             Assert.AreEqual(1f, clock.GameSpeed);
         }

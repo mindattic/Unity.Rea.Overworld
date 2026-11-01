@@ -116,3 +116,4 @@ updated: 2026-10-23
 | U.OVW-T63 | 2026-10-31 | chore | closed | Update HeroInput.cs, OverworldBootstrap.cs, WorldViewPresenter.cs | — |
 | U.OVW-T64 | 2026-10-31 | chore | closed | Update GameOver.cs, OverworldBootstrap.cs | — |
 | U.OVW-T65 | 2026-10-31 | chore | closed | Add GameOverTests.cs | — |
+| U.OVW-T66 | 2026-10-31 | chore | closed | Add PartyGameOver.cs.meta, GameOver.cs.meta; Update GameOverTests.cs | — |
