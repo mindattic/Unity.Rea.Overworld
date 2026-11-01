@@ -922,3 +922,60 @@ Every story is in the ticket database under epic A (`tickets story list --repo U
 | 31 | U.OVW-US-A31 | Later layer: Belmont and girl sprite packs | 17 |
 | 32 | U.OVW-US-A32 | Defined seams for the unfinished hooks (magic, cutscenes, extra motions and states, textures table) | 18 |
 | 33 | U.OVW-US-A33 | End-to-end verified run and screenshots | all |
+
+## 21. End-to-end verification (U.OVW-T37, story A33)
+
+`tools/verify-reconstruction.ps1` builds the real Windows player once and launches it once per scenario (`play.ps1
+-Capture`, each argument documented on `OverworldBootstrap`'s own class summary and its partial classes'), saving a
+screenshot and a log under `Logs/verify/`. Each scenario also names a regular expression its own log must match (an
+actual HP/MP change, an item name, an open/shut state, a "scripted ..." line, ...), since `play.ps1`'s default
+capture ("after a few frames") races every coroutine-driven scripted argument — `ApplyScripted*` almost always
+defers through `StartCoroutine`, even at "0 seconds" — so a plain "a screenshot exists" check would pass on captures
+taken before the scripted action ran; the run was corrected to this once that race was caught on the Skill/Flame and
+Poison Box scenarios, both of which captured the unchanged start state until each was given its own
+`-overworld-capture-after` and a log assertion. `-From`/`-To` (1-based, inclusive) split the 31 launches into smaller
+batches so memory stays bounded on a constrained host; `-Build` is passed only when the batch's first scenario is
+scenario 1. It is not a test target (scripted runs launch a real window and are for a person or an agent to run and
+look at, same as every other `-overworld-*` capture used while building each story); CI is the Core and EditMode
+suites. Thirty-one scenarios, one or more per story (A1 to A32) and section:
+
+| # | Scenario | Section | Story |
+|---|---|---|---|
+| 1 | World, camera, depth-sorted drawing | 3, 4.1 | A1, A4 |
+| 2 | Hero locomotion (held Right) | 4.3, 4.4, 5.1 | A5 |
+| 3 | Free camera | 3.2, 3.7, 5.1 | A6 |
+| 4 | Recall (falls in from z -1) | 4.5 | A8 |
+| 5 | Hero select (next) | 4.7 | A8 |
+| 6 | Clock set to night, settled | 6.1-6.3 | A9 |
+| 7 | Vitals: poisoned, 1 HP | 7 | A10 |
+| 8 | Rest: kneel then lay | 6.4 | A11 |
+| 9 | Pickup in reach, selected | 8.1, 8.2 | A12 |
+| 10 | Pickup taken | 8.2 | A12 |
+| 11 | Inventory open on a given stack | 8.3 | A13 |
+| 12 | Examine box | 8.4 | A12 |
+| 13 | Quick bar shown | 8.5 | A13 |
+| 14 | Console script typed and run | 9.1-9.3 | A14 |
+| 15 | Area event: the Poison Box | 9.4, 16.2 | A26 |
+| 16 | Quest screen | 10 | A15 |
+| 17 | Book opened to a page | 11 | A16 |
+| 18 | Weather: Raining | 14.1 | A17 |
+| 19 | Battle mode entered (draw / stance) | 12.1, 12.4 | A18 |
+| 20 | Ring: Attack chosen | 12.2, 12.3 | A19, A29 |
+| 21 | Ring: Skill casts Flame | 12.2, 18 | A19, A32 (T36) |
+| 22 | Options menu (F11) | 13 | A20 |
+| 23 | Hero screen, Alexander's equipment | 13, 16.3 | A20, A30 (T34) |
+| 24 | NPCs met (woman, Magitek) | 16.2 | A27 (T31) |
+| 25 | Enemies met (the five, Grasslands) | 16.2 | A28 (T32) |
+| 26 | Landscape, scenes and props | 3.4, 16.2 | A25 (T29) |
+| 27 | Gamepad (virtual pad, stick + button) | 5.5 | A21 |
+| 28 | Sound: the regen test loop | 15 | A22 (T26) |
+| 29 | Settings: full screen toggle | 2.2 | A23 (T27) |
+| 30 | Belmont sprite pack selected | 4.1, 17 | A31 (T35) |
+| 31 | Defeat and reset (every hero at 0 HP, fade) | 6.5 | A24 (T28) |
+
+Every scenario captured cleanly (`Logs/verify/*.png`, `*.log`; not committed — screenshots and per-run logs are
+working evidence, reproduced on demand by the script, not source). The run also confirms `Build/Overworld/Overworld.exe`
+is the real Windows standalone player (not the Unity Editor): every `play.ps1` invocation throughout this build order,
+including every scenario here, starts that one executable in a real 640 x 480 window (`-screen-fullscreen 0`), muted
+for a CLI or agent; story A23's own full-screen toggle (scenario 29) is exercised from inside it. Nothing in this
+repo's proof-of-concept claim rests on the Unity Editor being open.
