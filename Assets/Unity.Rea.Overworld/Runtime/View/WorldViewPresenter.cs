@@ -48,8 +48,12 @@ namespace MindAttic.Overworld.Runtime
         /// The 2007 database's landscape scenes (sky, ground strips, the mountain) and placed props (orchard trees,
         /// Stonehenge, the Gateway), U.OVW-T29: static, so a fixed sorting order from the database's own Z suffices
         /// (RECONSTRUCTION 16.2's "sizes are half-heights"; more negative Z, nearer the camera, draws over what is
-        /// further, the same sense weather's particles and clouds already draw in).
+        /// further, the same sense weather's particles and clouds already draw in). Above <see cref="BackdropOrder"/>
+        /// (the small original area's single backdrop box, which the 2007 world's own landscape replaces) with room for
+        /// every Z the database holds (+/- a tenth or so) either side.
         /// </summary>
+        public const int LandscapeOrder = BackdropOrder + 200;
+
         public const int LandscapeZScale = 1000;
 
         static readonly int MainTex = Shader.PropertyToID("_MainTex");
@@ -209,7 +213,7 @@ namespace MindAttic.Overworld.Runtime
             foreach (var s in world.Scenes)
             {
                 if (s.AreaId != areaId) continue;
-                var r = NewRenderer("Scene " + s.Id + " " + s.Name, Quad(s.Width, s.Height), s.Image, BackdropOrder - Mathf.RoundToInt(s.Z * LandscapeZScale), root);
+                var r = NewRenderer("Scene " + s.Id + " " + s.Name, Quad(s.Width, s.Height), s.Image, LandscapeOrder - Mathf.RoundToInt(s.Z * LandscapeZScale), root);
                 r.transform.localPosition = new Vector3(s.X, s.Y, 0f);
                 landscapeRenderers.Add(r);
             }
@@ -219,7 +223,7 @@ namespace MindAttic.Overworld.Runtime
                 if (p.AreaId != areaId) continue;
                 var art = world.FindPropArt(p.PropId);
                 if (art == null) continue;
-                var r = NewRenderer("Prop " + p.PropId + " " + art.Name + " @" + p.X, Quad(p.Width, p.Height), art.Image, BackdropOrder - Mathf.RoundToInt(p.Z * LandscapeZScale), root);
+                var r = NewRenderer("Prop " + p.PropId + " " + art.Name + " @" + p.X, Quad(p.Width, p.Height), art.Image, LandscapeOrder - Mathf.RoundToInt(p.Z * LandscapeZScale), root);
                 r.transform.localPosition = new Vector3(p.X, p.Y, 0f);
                 landscapeRenderers.Add(r);
             }
