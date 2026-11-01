@@ -21,6 +21,7 @@ namespace MindAttic.Overworld.Core
             Health = definition.Health;
             Mana = definition.Mana;
             Status = HeroStatus.Fine;
+            WeaponDurability = Definition.WeaponDefinition?.Durability ?? 0f;
         }
 
         /// <summary>The hero's place in the party (0 Chrono, 1 Belmont, 2 Flagg).</summary>
@@ -124,6 +125,13 @@ namespace MindAttic.Overworld.Core
 
         /// <summary>The weapon the hero carries (equipWeapon: the Fine Axe for Chrono, the Steel Sword for Belmont and Flagg).</summary>
         public WeaponDefinition Weapon => Definition.WeaponDefinition;
+
+        /// <summary>
+        /// This hero's own wear on <see cref="Weapon"/> (U.OVW-T33): the shared <see cref="WeaponDefinition"/> is read-only
+        /// content, loaded once for every hero carrying that weapon, so each hero keeps its own durability starting at the
+        /// weapon's own figure, never below 0. The original had no combat code to wear a weapon down at all.
+        /// </summary>
+        public float WeaponDurability { get; internal set; }
 
         /// <summary>
         /// The weapon frame drawn over the hero (renderWeapon): its draw or battle-stance frame in step with the hero's own,
