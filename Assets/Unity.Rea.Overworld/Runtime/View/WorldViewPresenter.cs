@@ -44,6 +44,14 @@ namespace MindAttic.Overworld.Runtime
         /// <summary>The range circles' dots are drawn behind the heroes, after the pickups and drops (renderCircle, layer 1).</summary>
         public const int CircleOrder = ObjectsOrder - 1;
 
+        /// <summary>
+        /// The 2007 database's landscape scenes (sky, ground strips, the mountain) and placed props (orchard trees,
+        /// Stonehenge, the Gateway), U.OVW-T29: static, so a fixed sorting order from the database's own Z suffices
+        /// (RECONSTRUCTION 16.2's "sizes are half-heights"; more negative Z, nearer the camera, draws over what is
+        /// further, the same sense weather's particles and clouds already draw in).
+        /// </summary>
+        public const int LandscapeZScale = 1000;
+
         static readonly int MainTex = Shader.PropertyToID("_MainTex");
 
         readonly List<KeyValuePair<AreaTileDefinition, MeshRenderer>> tiles = new List<KeyValuePair<AreaTileDefinition, MeshRenderer>>();
@@ -183,6 +191,38 @@ namespace MindAttic.Overworld.Runtime
             }
 
             Refresh();
+        }
+
+        readonly List<MeshRenderer> landscapeRenderers = new List<MeshRenderer>();
+
+        /// <summary>
+        /// Draws <paramref name="world"/>'s area <paramref name="areaId"/> landscape (U.OVW-T29; RECONSTRUCTION 16.2): every
+        /// Scene as a picture quad at its place (width and the database's own half-height, Y its vertical centre), and every
+        /// Area_Props placement (its <see cref="PropArtRecord"/>'s picture) the same way, each depth-sorted by its own Z
+        /// (more negative, nearer the camera, drawn over what is further). Scenes and props are static: built once.
+        /// </summary>
+        public void ShowLandscape(WorldData world, int areaId)
+        {
+            if (world == null || landscapeRenderers.Count > 0) return;
+            var root = new GameObject("Landscape").transform;
+            root.SetParent(transform, false);
+            foreach (var s in world.Scenes)
+            {
+                if (s.AreaId != areaId) continue;
+                var r = NewRenderer("Scene " + s.Id + " " + s.Name, Quad(s.Width, s.Height), s.Image, BackdropOrder - Mathf.RoundToInt(s.Z * LandscapeZScale), root);
+                r.transform.localPosition = new Vector3(s.X, s.Y, 0f);
+                landscapeRenderers.Add(r);
+            }
+
+            foreach (var p in world.AreaProps)
+            {
+                if (p.AreaId != areaId) continue;
+                var art = world.FindPropArt(p.PropId);
+                if (art == null) continue;
+                var r = NewRenderer("Prop " + p.PropId + " " + art.Name + " @" + p.X, Quad(p.Width, p.Height), art.Image, BackdropOrder - Mathf.RoundToInt(p.Z * LandscapeZScale), root);
+                r.transform.localPosition = new Vector3(p.X, p.Y, 0f);
+                landscapeRenderers.Add(r);
+            }
         }
 
         readonly List<MeshRenderer> dropRenderers = new List<MeshRenderer>();
