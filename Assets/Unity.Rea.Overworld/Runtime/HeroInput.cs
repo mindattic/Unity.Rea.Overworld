@@ -314,8 +314,12 @@ namespace MindAttic.Overworld.Runtime
             if (nextHero.WasPressedThisFrame()) Game.Submit(new CycleLeader(Player, 1));
             if (team.WasPressedThisFrame()) Game.Submit(new ToggleTeam(Player));
             if (rest.WasPressedThisFrame()) Game.Submit(new Rest(Player));
-            if (previousItem.WasPressedThisFrame()) Game.Submit(new CyclePickup(Player, -1));
-            if (nextItem.WasPressedThisFrame()) Game.Submit(new CyclePickup(Player, 1));
+            // While the hero screen is open, , and . cycle Alexander's equipped weapon instead of the pickups in reach
+            // (U.OVW-T34): the hero screen has nothing to do with pickups, so the same keys serve a second, unrelated
+            // context rather than a new pair being spent on hero.mdb's one hero.
+            var onHeroScreen = Interface != null && Interface.For(Player).HeroScreenOpen;
+            if (previousItem.WasPressedThisFrame()) Game.Submit(onHeroScreen ? (ICommand)new CycleEquippedWeapon(Player, -1) : new CyclePickup(Player, -1));
+            if (nextItem.WasPressedThisFrame()) Game.Submit(onHeroScreen ? (ICommand)new CycleEquippedWeapon(Player, 1) : new CyclePickup(Player, 1));
             if (inventory.WasPressedThisFrame()) Game.Submit(new ToggleInventory(Player));
             if (drop.WasPressedThisFrame()) Game.Submit(new DropItem(Player));
             if (quickBar.WasPressedThisFrame()) Game.Submit(new ToggleQuickBar(Player));
