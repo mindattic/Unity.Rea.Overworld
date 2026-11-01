@@ -71,6 +71,9 @@ namespace MindAttic.Overworld.Core
         /// <summary>Sound.vb's volumes and the sound files wired to their events (audio.json, U.OVW-T26).</summary>
         public AudioData Audio { get; private set; }
 
+        /// <summary>The original's unused Belmont and girl sprite sets, selectable per hero (sprite-packs.json, U.OVW-T35).</summary>
+        public SpritePackData SpritePacks { get; private set; }
+
         /// <summary>The original's own dangling references, kept faithfully (not errors): where and what.</summary>
         public IReadOnlyList<string> Warnings { get; private set; }
 
@@ -164,6 +167,7 @@ namespace MindAttic.Overworld.Core
             registry.Developer = DeveloperData.Read(source, manifest.Text("developer"), registry.Hud, errors);
             registry.Gamepad = GamepadData.Read(source, manifest.Text("gamepad"), errors);
             registry.Audio = AudioData.Read(source, manifest.Text("audio"), errors);
+            registry.SpritePacks = SpritePackData.Read(source, manifest.Text("spritePacks"), errors);
             manifest.Done();
 
             // A pickup that opens a book by its own name ("CHANGE BOOK TO ITEM") must name a real book.
