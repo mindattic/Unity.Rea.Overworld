@@ -21,5 +21,6 @@
   "scripts": "scripts.json",
   "developer": "developer.json",
   "gamepad": "gamepad.json",
-  "audio": "audio.json"
+  "audio": "audio.json",
+  "spritePacks": "sprite-packs.json"
 }
