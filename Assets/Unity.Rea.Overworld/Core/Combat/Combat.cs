@@ -82,5 +82,20 @@ namespace MindAttic.Overworld.Core
             var multiplier = (weapon.Slashing * m.Slashing + weapon.Piercing * m.Piercing + weapon.Blunt * m.Blunt) / split;
             return Math.Max(1, (int)Math.Round(weapon.Rating * multiplier, MidpointRounding.AwayFromZero));
         }
+
+        /// <summary>
+        /// The hero database's own four weapons (hero.mdb's later design, RECONSTRUCTION 16.3: Axe, Steel Sword, Katana,
+        /// Broad Sword) carry a simpler figure than weapons.json's split (just a power and a random bonus up to it, no
+        /// class at all), so they resolve a hit the same way the original's own numbers imply rather than through
+        /// <see cref="Damage(WeaponDefinition, string)"/>'s class table: power plus a random amount from 0 to the
+        /// weapon's own "random" figure, at least 1. No hero carries one of these yet (that is the Equipment story,
+        /// U.OVW-T35); this is here, and tested, so the hero database's own weapons are provably resolved already.
+        /// </summary>
+        public static int DamageFromRecord(WeaponRecord weapon, Random random)
+        {
+            if (weapon == null) return 0;
+            var bonus = weapon.Random > 0 ? (random ?? new Random()).Next(0, weapon.Random + 1) : 0;
+            return Math.Max(1, weapon.Power + bonus);
+        }
     }
 }

@@ -141,6 +141,24 @@ namespace MindAttic.Overworld.Core
                     taken = true;
                     PassTurn(game, command.Player, game.Tick, events, false);
                     break;
+                case RingEntry.Attack:
+                    // The original's checkRingEffect left Attack and Skill doing nothing at all (RECONSTRUCTION 12.2); with
+                    // a target now in range (U.OVW-T33), resolving a hit is the one it is evidently for.
+                    if (hero.Weapon != null && FindEnemyInRange != null)
+                    {
+                        var target = FindEnemyInRange(hero.X, hero.Y, hero.Weapon.Range);
+                        if (target != null)
+                        {
+                            var damage = Combat.Damage(hero.Weapon, target.Class);
+                            target.Health = Math.Max(0, target.Health - damage);
+                            hero.WeaponDurability = Math.Max(0f, hero.WeaponDurability - 1f);
+                            events.Add(new EnemyHit(game.Tick, command.Player, hero.Index, target.Id, damage, target.Health, target.MaxHealth));
+                            taken = true;
+                            PassTurn(game, command.Player, game.Tick, events, true);
+                        }
+                    }
+
+                    break;
             }
 
             events.Insert(0, new RingEntryChosen(game.Tick, command.Player, hero.Index, entry, taken));

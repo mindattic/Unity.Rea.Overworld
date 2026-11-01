@@ -203,6 +203,8 @@ namespace MindAttic.Overworld.Runtime
             Npcs = new WorldNpcs(Content.PlayableWorld, Content.PlayableWorld?.Start?.AreaId ?? 1).Install(game);
             // The five data-defined enemies, placed and moved by their own state (RECONSTRUCTION 16.2, U.OVW-T32).
             Enemies = new WorldEnemies(Content.PlayableWorld, Party).Install(game);
+            // Attacking resolves against a world enemy, a world-level system Party has no reference of its own to (U.OVW-T33).
+            Party.FindEnemyInRange = Enemies.NearestInRange;
             // loadOptions' first-run message box, queued ahead of the tutorial (RECONSTRUCTION 2.2, U.OVW-T27).
             if (Window.FirstRun) Messages.SayWelcome();
             // Engine's start-up queued the tutorial last, once everything had loaded.
