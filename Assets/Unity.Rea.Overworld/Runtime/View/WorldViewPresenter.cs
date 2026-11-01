@@ -241,6 +241,35 @@ namespace MindAttic.Overworld.Runtime
             }
         }
 
+        readonly List<KeyValuePair<NpcView, MeshRenderer>> npcRenderers = new List<KeyValuePair<NpcView, MeshRenderer>>();
+
+        /// <summary>The placed NPCs drawn (null: none).</summary>
+        public WorldNpcs Npcs { get; private set; }
+
+        /// <summary>
+        /// Draws <paramref name="npcs"/> from now on (U.OVW-T31): each one an NPC-size quad of its current picture at its
+        /// place, after the pickups and before the heroes, within the camera's render range.
+        /// </summary>
+        public void ShowNpcs(WorldNpcs npcs)
+        {
+            Npcs = npcs;
+            if (npcs != null && npcRenderers.Count == 0)
+            {
+                var root = new GameObject("Npcs").transform;
+                root.SetParent(transform, false);
+                foreach (var npc in npcs.Npcs)
+                {
+                    // Width 0.144, Height 0.072 is the same half-height convention Scenes and Props use (RECONSTRUCTION
+                    // 16.2 "sizes are half-heights"): the drawn square is 0.144 x 0.144, matching the 48 x 48 pictures.
+                    var r = NewRenderer("Npc " + npc.NpcId + " " + npc.Name, Quad(npc.Width, npc.Height), npc.Sprite, PickupsOrder - 1, root);
+                    r.transform.localPosition = new Vector3(npc.X, npc.Y, 0f);
+                    npcRenderers.Add(new KeyValuePair<NpcView, MeshRenderer>(npc, r));
+                }
+            }
+
+            Refresh();
+        }
+
         readonly List<MeshRenderer> dropRenderers = new List<MeshRenderer>();
         Transform dropRoot;
 
