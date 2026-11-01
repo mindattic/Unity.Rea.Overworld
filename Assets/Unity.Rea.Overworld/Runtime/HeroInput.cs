@@ -41,6 +41,10 @@ namespace MindAttic.Overworld.Runtime
         InputAction inventory, drop, quickBar, questScreen, book, nextBook, weather, battle;
         InputAction options, fps, pause, heroScreen;
         InputAction regenTest, regenTestStop;
+        InputAction fullScreen;
+
+        /// <summary>The window's saved width, height, depth and mode (RECONSTRUCTION 2.2, U.OVW-T27); null reads no F12 key.</summary>
+        public WindowSettings Window { get; set; }
         readonly InputAction[] quickKeys = new InputAction[10];
         Vector2? scriptedMouse;
         int scriptedWheelSent;
@@ -141,6 +145,8 @@ namespace MindAttic.Overworld.Runtime
             // Sound.vb's F7 / F8 (RECONSTRUCTION 15, U.OVW-T26): a frmMain-style key, read the same as weather's W.
             regenTest = Button("RegenTest", "<Keyboard>/f7");
             regenTestStop = Button("RegenTestStop", "<Keyboard>/f8");
+            // F12 (RECONSTRUCTION 2.2, U.OVW-T27): another frmMain-style key, read the same as weather's W.
+            fullScreen = Button("FullScreen", "<Keyboard>/f12");
             // 1 to 9 then 0: quick slots 0 to 9.
             for (var i = 0; i < quickKeys.Length; i++) quickKeys[i] = Button("Quick" + (i + 1) % 10, "<Keyboard>/digit" + (i + 1) % 10);
         }
@@ -177,7 +183,7 @@ namespace MindAttic.Overworld.Runtime
             left, right, up, down, run, move, point,
             motion, wheel, zoom, fast, examine, freeCamera, isometric, deisometric, strafeLeft, strafeRight, strafeUp, strafeDown,
             previousHero, nextHero, team, select, rest, confirm, previousItem, nextItem, inventory, drop, quickBar, questScreen, book, nextBook, weather, battle,
-            options, fps, pause, heroScreen, regenTest, regenTestStop,
+            options, fps, pause, heroScreen, regenTest, regenTestStop, fullScreen,
             quickKeys[0], quickKeys[1], quickKeys[2], quickKeys[3], quickKeys[4], quickKeys[5], quickKeys[6], quickKeys[7], quickKeys[8], quickKeys[9],
         };
 
@@ -246,6 +252,8 @@ namespace MindAttic.Overworld.Runtime
             // F7 / F8 (RECONSTRUCTION 15, U.OVW-T26): Sound.vb's regen test, read like W with the console shut.
             if (UseDevices && !consoleWasOpen && regenTest.WasPressedThisFrame()) Game.Submit(new PlayRegenTest(Player));
             if (UseDevices && !consoleWasOpen && regenTestStop.WasPressedThisFrame()) Game.Submit(new StopRegenTest(Player));
+            // F12 (RECONSTRUCTION 2.2, U.OVW-T27): infrastructure, not game state, so it never goes through Core (SessionAudio's precedent).
+            if (UseDevices && !consoleWasOpen && fullScreen.WasPressedThisFrame()) Window?.ToggleFullScreen();
             // J was a frmMain key too: the gamepad off and on (U.OVW-US-A21).
             if (UseDevices && !consoleWasOpen) JoystickKey();
             // The developer tools' frmMain keys (U.OVW-T47): with the console shut and the game not paused.

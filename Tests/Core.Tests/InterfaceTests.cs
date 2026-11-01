@@ -122,6 +122,21 @@ namespace MindAttic.Overworld.Tests
             Assert.AreEqual((255, 255, 255), (messages.Shown[0].R, messages.Shown[0].G, messages.Shown[0].B));
         }
 
+        /// <summary>U.OVW-T27: loadOptions' first-run message box (RECONSTRUCTION 2.2), queued through the message board instead of a blocking OS dialog.</summary>
+        [Test]
+        public void TheWelcomeIsTheOriginalsFirstRunMessage()
+        {
+            var lines = Hud.Welcome.Lines;
+            CollectionAssert.AreEqual(new[] { "Starting for the first time . . .", "Welcome and beware!" }, lines);
+            Assert.AreEqual("fontArial", Hud.Welcome.Font.Name);
+
+            messages.SayWelcome();
+            Assert.AreEqual(2, messages.Waiting);
+            Steps(1);
+            Assert.AreEqual("Starting for the first time . . .", messages.Shown[0].Caption);
+            Assert.AreEqual((255, 255, 255), (messages.Shown[0].R, messages.Shown[0].G, messages.Shown[0].B));
+        }
+
         [Test]
         public void TheOptionsMenuStepsWrapsAndOpensItsPages()
         {

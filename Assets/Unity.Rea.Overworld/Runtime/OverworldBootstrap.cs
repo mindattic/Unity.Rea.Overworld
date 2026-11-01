@@ -49,6 +49,7 @@ namespace MindAttic.Overworld.Runtime
     /// <see cref="ApplyScriptedRing"/>); the interface's <c>-overworld-options</c>, <c>-overworld-hero-screen</c>,
     /// <c>-overworld-pause</c>, <c>-overworld-fps-off</c>, <c>-overworld-hover</c> and <c>-overworld-loading</c> (see
     /// <see cref="ApplyScriptedInterface"/>); the sound's <c>-overworld-regen-test</c> (see <see cref="ApplyScriptedRegenTest"/>);
+    /// the window's <c>-overworld-full-screen-test</c> (see <see cref="ApplyScriptedFullScreenTest"/>);
     /// <c>-overworld-capture &lt;file.png&gt;</c> saves a screenshot and quits, after a few frames or after
     /// <c>-overworld-capture-after &lt;seconds&gt;</c> of play. Any scripted argument (or a capture) leaves the real
     /// keyboard and mouse alone, so the system pointer is never taken.
@@ -77,6 +78,7 @@ namespace MindAttic.Overworld.Runtime
         public const string ExaminePickupArgument = "-overworld-examine-pickup";
         public const string SeedArgument = "-overworld-seed";
         public const string RegenTestArgument = "-overworld-regen-test";
+        public const string FullScreenTestArgument = "-overworld-full-screen-test";
 
         public ContentRegistry Content { get; private set; }
         public GameHost Host { get; private set; }
@@ -100,6 +102,7 @@ namespace MindAttic.Overworld.Runtime
         public InterfaceControl Interface { get; private set; }
         public RegenTest RegenTest { get; private set; }
         public OverworldAudio Audio { get; private set; }
+        public WindowSettings Window { get; private set; }
 
         public const string OptionsArgument = "-overworld-options";
         public const string HeroScreenArgument = "-overworld-hero-screen";
@@ -134,6 +137,10 @@ namespace MindAttic.Overworld.Runtime
 
         void Start()
         {
+            // loadOptions (RECONSTRUCTION 2.2, U.OVW-T27): the window's saved width, height, depth and mode, applied
+            // before anything else loads, as the original's first start-up step did.
+            Window = WindowSettings.Load();
+            Window.Apply();
             Content = ContentRegistry.Load(new DirectoryContentSource(ContentDirectory));
             var args = Environment.GetCommandLineArgs();
             var game = new Game();
@@ -184,6 +191,8 @@ namespace MindAttic.Overworld.Runtime
             Sleep = new SleepCycle(Party, Clock).Install(game);
             Clock.Install(game);
             Messages.Install(game);
+            // loadOptions' first-run message box, queued ahead of the tutorial (RECONSTRUCTION 2.2, U.OVW-T27).
+            if (Window.FirstRun) Messages.SayWelcome();
             // Engine's start-up queued the tutorial last, once everything had loaded.
             Messages.SayTutorial();
             Scripts.Sleep = Sleep;
@@ -234,6 +243,7 @@ namespace MindAttic.Overworld.Runtime
             Input.InventoryButton = Content.Hud.InventoryButton;
             Input.Scripts = Scripts;
             Input.Interface = Interface;
+            Input.Window = Window;
             Input.transform.SetParent(transform, false);
             // Sound (U.OVW-T26): Music.mp3 looping from the start, switching to Battle.mp3 in battle mode, the unused
             // effects wired to their events, and zombies ambient looping in the "Entering Dark Woods" event box.
@@ -269,7 +279,8 @@ namespace MindAttic.Overworld.Runtime
             battled |= ApplyScriptedRing(args, game);
             var shown = ApplyScriptedInterface(args, game);
             var soundTested = ApplyScriptedRegenTest(args, game);
-            if (scripted.HasValue || scriptedView || recalled || party || vitals || rested || picked || packed || typed || quested || read || weathered || battled || shown || soundTested || seeded || capture != null) Input.UseDevices = false;
+            var windowTested = ApplyScriptedFullScreenTest(args);
+            if (scripted.HasValue || scriptedView || recalled || party || vitals || rested || picked || packed || typed || quested || read || weathered || battled || shown || soundTested || windowTested || seeded || capture != null) Input.UseDevices = false;
 
             // frmMain showed a random loading picture while the engine loaded; real play holds it a moment, scripted runs
             // skip it unless -overworld-loading asks for it.
@@ -1148,6 +1159,21 @@ namespace MindAttic.Overworld.Runtime
             var result = game.Submit(new PlayRegenTest(PlayerId.One));
             if (result.Accepted) Debug.Log("Unity.Overworld: scripted regen test, playing " + RegenTest.Playing);
             else Debug.LogError("Unity.Overworld: " + RegenTestArgument + " was refused: " + result.Reason);
+            return true;
+        }
+
+        /// <summary>
+        /// Applies <c>-overworld-full-screen-test</c> (U.OVW-T27): presses F12 and logs the leader's place before and
+        /// after, so a capture or log shows the toggle never lost the game; true when given.
+        /// </summary>
+        bool ApplyScriptedFullScreenTest(string[] args)
+        {
+            if (!HasFlag(args, FullScreenTestArgument)) return false;
+            var before = Party.Leader(PlayerId.One);
+            Debug.Log("Unity.Overworld: scripted full screen test, before: windowed " + Window.Windowed + ", " + before);
+            Window.ToggleFullScreen();
+            var after = Party.Leader(PlayerId.One);
+            Debug.Log("Unity.Overworld: scripted full screen test, after: windowed " + Window.Windowed + ", " + after + "; game kept: " + ReferenceEquals(before, after));
             return true;
         }
 
