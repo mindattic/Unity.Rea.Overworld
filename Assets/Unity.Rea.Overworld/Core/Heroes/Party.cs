@@ -77,6 +77,7 @@ namespace MindAttic.Overworld.Core
         {
             if (game == null) throw new ArgumentNullException(nameof(game));
             game.Register<SetMoveInput>(HandleInput);
+            InstallSpritePacks(game);
             game.Register<RecallHero>(HandleRecall);
             game.Register<ToggleTeam>(HandleTeam);
             game.Register<SelectHero>(HandleSelect);
