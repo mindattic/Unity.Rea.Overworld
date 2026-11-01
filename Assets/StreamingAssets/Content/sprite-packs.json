@@ -30,11 +30,15 @@
         },
         "walk": {
           "left": ["gfx/hero/belmont/walk/run_left1.PNG", "gfx/hero/belmont/walk/run_left2.PNG", "gfx/hero/belmont/walk/run_left3.PNG", "gfx/hero/belmont/walk/run_left4.PNG", "gfx/hero/belmont/walk/run_left5.PNG", "gfx/hero/belmont/walk/run_left6.PNG"],
-          "right": ["gfx/hero/belmont/walk/run_right1.PNG", "gfx/hero/belmont/walk/run_right2.PNG", "gfx/hero/belmont/walk/run_right3.PNG", "gfx/hero/belmont/walk/run_right4.PNG", "gfx/hero/belmont/walk/run_right5.PNG", "gfx/hero/belmont/walk/run_right6.PNG"]
+          "right": ["gfx/hero/belmont/walk/run_right1.PNG", "gfx/hero/belmont/walk/run_right2.PNG", "gfx/hero/belmont/walk/run_right3.PNG", "gfx/hero/belmont/walk/run_right4.PNG", "gfx/hero/belmont/walk/run_right5.PNG", "gfx/hero/belmont/walk/run_right6.PNG"],
+          "up": ["gfx/hero/belmont/walk/run_right1.PNG", "gfx/hero/belmont/walk/run_right2.PNG", "gfx/hero/belmont/walk/run_right3.PNG", "gfx/hero/belmont/walk/run_right4.PNG", "gfx/hero/belmont/walk/run_right5.PNG", "gfx/hero/belmont/walk/run_right6.PNG"],
+          "down": ["gfx/hero/belmont/walk/run_left1.PNG", "gfx/hero/belmont/walk/run_left2.PNG", "gfx/hero/belmont/walk/run_left3.PNG", "gfx/hero/belmont/walk/run_left4.PNG", "gfx/hero/belmont/walk/run_left5.PNG", "gfx/hero/belmont/walk/run_left6.PNG"]
         },
         "run": {
           "left": ["gfx/hero/belmont/run/run_left1.PNG", "gfx/hero/belmont/run/run_left2.PNG", "gfx/hero/belmont/run/run_left3.PNG", "gfx/hero/belmont/run/run_left4.PNG", "gfx/hero/belmont/run/run_left5.PNG", "gfx/hero/belmont/run/run_left6.PNG"],
-          "right": ["gfx/hero/belmont/run/run_right1.PNG", "gfx/hero/belmont/run/run_right2.PNG", "gfx/hero/belmont/run/run_right3.PNG", "gfx/hero/belmont/run/run_right4.PNG", "gfx/hero/belmont/run/run_right5.PNG", "gfx/hero/belmont/run/run_right6.PNG"]
+          "right": ["gfx/hero/belmont/run/run_right1.PNG", "gfx/hero/belmont/run/run_right2.PNG", "gfx/hero/belmont/run/run_right3.PNG", "gfx/hero/belmont/run/run_right4.PNG", "gfx/hero/belmont/run/run_right5.PNG", "gfx/hero/belmont/run/run_right6.PNG"],
+          "up": ["gfx/hero/belmont/run/run_right1.PNG", "gfx/hero/belmont/run/run_right2.PNG", "gfx/hero/belmont/run/run_right3.PNG", "gfx/hero/belmont/run/run_right4.PNG", "gfx/hero/belmont/run/run_right5.PNG", "gfx/hero/belmont/run/run_right6.PNG"],
+          "down": ["gfx/hero/belmont/run/run_left1.PNG", "gfx/hero/belmont/run/run_left2.PNG", "gfx/hero/belmont/run/run_left3.PNG", "gfx/hero/belmont/run/run_left4.PNG", "gfx/hero/belmont/run/run_left5.PNG", "gfx/hero/belmont/run/run_left6.PNG"]
         },
         "draw": {
           "left": ["gfx/hero/belmont/attack/attack_left1.PNG", "gfx/hero/belmont/attack/attack_left2.PNG", "gfx/hero/belmont/attack/attack_left3.PNG", "gfx/hero/belmont/attack/attack_left4.PNG", "gfx/hero/belmont/attack/attack_left5.PNG", "gfx/hero/belmont/attack/attack_left6.PNG", "gfx/hero/belmont/attack/attack_left7.PNG"],
