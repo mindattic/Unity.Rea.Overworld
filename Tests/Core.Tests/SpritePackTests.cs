@@ -63,7 +63,7 @@ namespace MindAttic.Overworld.Tests
         public void AHeroDrawsWithTheSharedSetUntilGivenAPackOfItsOwn()
         {
             Assert.IsNull(chrono.SpritePackName);
-            Assert.AreSame(party.Sprites, party.SpritesFor(chrono));
+            Assert.AreSame(party.Data.Sprites, party.SpritesFor(chrono));
             Assert.AreEqual(chrono.Definition.WalkFrames, party.WalkFramesFor(chrono));
         }
 
@@ -88,7 +88,7 @@ namespace MindAttic.Overworld.Tests
 
             Assert.IsTrue(game.Submit(new SelectSpritePack(PlayerId.One, chrono.Index, null)).Accepted);
             Assert.IsNull(chrono.SpritePackName);
-            Assert.AreSame(party.Sprites, party.SpritesFor(chrono));
+            Assert.AreSame(party.Data.Sprites, party.SpritesFor(chrono));
         }
 
         [Test]
