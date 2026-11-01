@@ -60,8 +60,7 @@ namespace MindAttic.Overworld.Core
                     if (script == null) continue;
                     if (!was)
                     {
-                        var ran = scripts.Run(game, player, leader.Index, script.Text, tick, events);
-                        Console.WriteLine("AreaEvents entry run " + script.Text + " => " + ran);
+                        scripts.Run(game, player, leader.Index, script.Text, tick, events);
                         lastRun[key] = now;
                     }
                     else if (script.Rate > 0f && now + 1e-9 >= lastRun.GetValueOrDefault(key, double.NegativeInfinity) + script.Rate)

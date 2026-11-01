@@ -65,10 +65,11 @@ namespace MindAttic.Overworld.Tests
         public void ContainsTestsTheBoxWithTheOriginAdded()
         {
             var e = Find("Poison Box");
-            Console.WriteLine($"X={e.X} Y={e.Y} Left={e.Left} Right={e.Right} Top={e.Top} Bottom={e.Bottom} HasOrigin={e.HasOrigin}");
-            Assert.IsTrue(AreaEvents.Contains(e, e.X, e.Y));
-            Assert.IsTrue(AreaEvents.Contains(e, e.X + e.Left, e.Y + e.Top));
-            Assert.IsFalse(AreaEvents.Contains(e, e.X + e.Left - 0.001f, e.Y));
+            // (X, Y) is an anchor the box's edges are offset from, not necessarily inside the box itself.
+            Assert.IsTrue(AreaEvents.Contains(e, e.X + e.Left, e.Y + e.Top), "the box's own corner");
+            Assert.IsTrue(AreaEvents.Contains(e, e.X + e.Right, e.Y + e.Bottom), "the opposite corner");
+            Assert.IsFalse(AreaEvents.Contains(e, e.X + e.Left - 0.001f, e.Y + e.Top), "just left of the box");
+            Assert.IsFalse(AreaEvents.Contains(e, e.X + e.Left, e.Y + e.Top + 0.001f), "just above the box");
         }
 
         [Test]
@@ -102,28 +103,26 @@ namespace MindAttic.Overworld.Tests
         public void EnteringDarkWoodsTurnsNightOnceNotEveryTick()
         {
             var box = Find("Entering Dark Woods");
-            var script = Registry.PlayableWorld.FindScript(box.ScriptId);
-            Console.WriteLine($"box X={box.X} Y={box.Y} L={box.Left} R={box.Right} T={box.Top} B={box.Bottom} scriptId={box.ScriptId} script={script?.Text} rate={script?.Rate}");
-            Assert.AreNotEqual("Night", clock.Period.Name);
+            Assert.AreNotEqual(22, clock.Now.Hour);
             PlaceLeaderIn(box);
-            Console.WriteLine($"chrono at ({chrono.X},{chrono.Y}) inside={AreaEvents.Contains(box, chrono.X, chrono.Y)}");
             Steps(1);
-            Console.WriteLine($"period now {clock.Period.Name}");
-            Assert.AreEqual("Night", clock.Period.Name);
+            // DAYPERIOD sets the hour without settling the period at once (ChangeTime's "false"): it follows on the
+            // clock's next minute (secondsPerMinute 1 at game speed 1: 60 ticks).
+            Assert.AreEqual(22, clock.Now.Hour, "the hour is set at once");
+            Steps(60);
+            Assert.AreEqual("Night", clock.Period.Name, "the period follows on the next minute");
 
-            // Setting the period back to Day and staying inside does not flip it again (rate 0: once on entry only).
+            // Setting the hour back to noon and staying inside does not run the script again (rate 0: once on entry only).
             Assert.IsTrue(game.Submit(new SetClock(PlayerId.One, 12, 0)).Accepted);
-            Assert.AreNotEqual("Night", clock.Period.Name);
-            Steps(10);
-            Assert.AreNotEqual("Night", clock.Period.Name, "already inside; rate 0 only ran once, on entry");
+            Steps(60);
+            Assert.AreNotEqual(22, clock.Now.Hour, "already inside; rate 0 only ran once, on entry");
 
             // Leaving and re-entering runs it again.
             Assert.IsTrue(game.Submit(new PlaceHero(PlayerId.One, 0, 999f, 999f)).Accepted);
             Steps(1);
-            Assert.IsTrue(game.Submit(new SetClock(PlayerId.One, 12, 0)).Accepted);
             PlaceLeaderIn(box);
             Steps(1);
-            Assert.AreEqual("Night", clock.Period.Name);
+            Assert.AreEqual(22, clock.Now.Hour);
         }
 
         [Test]
