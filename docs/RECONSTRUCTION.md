@@ -399,6 +399,12 @@ Each frame: if the current hero's Health is 0 or below, `fadeOut` decreases by 1
 It does **not** restore health, position, gold, experience, quests, the clock or `fadeOut`, so after a death the game keeps calling `Reset` every frame while the screen stays black (defect, section 18).
 `R` calls the same routine.
 
+What the rebuild builds (U.OVW-T28; BIBLE "Death and Reset"): the same fade (255 to 0) and the same Reset effects where
+this rebuild has state to reset (menus, FPS, pause, tutorial, game speed, day period, camera, pickups, the pack); gold,
+experience, quests and the clock's date and time stay untouched, exactly as the original left them. Unlike the original,
+every hero is restored to full health, mana and stamina at its start position, so play resumes instead of the screen
+staying black forever (the fixed defect). R forces the same reset at once.
+
 ## 7. Vitals and status (`Heroes.checkStatus`, `checkRegen`)
 
 - Status: if not Poisoned, Fine; stamina below 15 percent of maximum: Exhausted; health below 5 percent: Angry. Poisoned persists until cured (`CHANGE HERO STATUS FINE`).
