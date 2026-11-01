@@ -114,7 +114,7 @@ namespace MindAttic.Overworld.Tests
             Assert.IsTrue(game.Submit(new SelectSpritePack(PlayerId.One, belmont.Index, "Belmont")).Accepted);
             Assert.AreEqual("Belmont", belmont.SpritePackName);
             Assert.IsNull(another.SpritePackName);
-            Assert.AreSame(party.Sprites, party.SpritesFor(another));
+            Assert.AreSame(party.Data.Sprites, party.SpritesFor(another));
         }
     }
 }
