@@ -214,6 +214,8 @@ namespace MindAttic.Overworld.Runtime
             World.LightBy(Clock);
             World.DimBy(Sleep);
             World.FadeBy(GameOver);
+            // The later world design (U.OVW-T29): the start area's landscape scenes and placed props, static.
+            World.ShowLandscape(Content.PlayableWorld, Content.PlayableWorld?.Start?.AreaId ?? 1);
             World.ShowPickups(Pickups);
             World.ShowWeather(Weather, game);
             World.ShowClouds(Clouds, game);
