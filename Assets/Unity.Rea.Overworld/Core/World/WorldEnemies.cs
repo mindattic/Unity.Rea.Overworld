@@ -163,6 +163,7 @@ namespace MindAttic.Overworld.Core
             {
                 if (enemy.Health <= 0) continue; // defeated (U.OVW-T33): holds still, drawn no more
                 Hero target = null;
+                PlayerId targetPlayer = default;
                 var nearestDistance = float.MaxValue;
                 foreach (var player in game.Players)
                 {
@@ -172,17 +173,20 @@ namespace MindAttic.Overworld.Core
                     if (target == null || d < nearestDistance)
                     {
                         target = leader;
+                        targetPlayer = player;
                         nearestDistance = d;
                     }
                 }
 
                 var moving = false;
+                var acting = false;
                 if (target != null)
                 {
                     var distance = Distance(enemy.X, enemy.Y, target.X, target.Y);
                     switch (enemy.State)
                     {
                         case "Aggressive":
+                            acting = true;
                             moving = distance <= enemy.Range;
                             if (moving) MoveToward(enemy, target.X, target.Y);
                             break;
@@ -192,11 +196,22 @@ namespace MindAttic.Overworld.Core
                             break;
                         case "Defensive":
                             if (!enemy.Triggered && distance <= enemy.Range / 2f) enemy.Triggered = true;
+                            acting = enemy.Triggered;
                             moving = enemy.Triggered && distance <= enemy.Range;
                             if (moving) MoveToward(enemy, target.X, target.Y);
                             break;
                         default: // Passive: ignores the party
                             break;
+                    }
+
+                    // Being attacked (U.OVW-T33): an acting enemy within contact range hits the target, at the Poison
+                    // Box's own rate, so retreating out of contact (or past Range, which drops it back to idle) ends it.
+                    if (acting && distance <= ContactRange && target.Health > 0 &&
+                        now + 1e-9 >= enemy.LastAttackTime + AttackRate)
+                    {
+                        target.Health = Math.Max(0, target.Health - 1);
+                        enemy.LastAttackTime = now;
+                        events.Add(new HeroVitalsChanged(tick, target.Index, target.Health, target.Mana, target.Stamina));
                     }
                 }
 
