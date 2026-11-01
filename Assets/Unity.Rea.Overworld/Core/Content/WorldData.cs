@@ -216,6 +216,7 @@ namespace MindAttic.Overworld.Core
         public AreaRecord FindArea(int id) => Areas.Find(a => a.Id == id);
         public ScriptRecord FindScript(int id) => Scripts.Find(s => s.Id == id);
         public PropArtRecord FindPropArt(int id) => PropArt.Find(p => p.Id == id);
+        public NpcRecord FindNpc(int id) => Npcs.Find(n => n.Id == id);
 
         internal static readonly string[] EngineSchema =
         {
