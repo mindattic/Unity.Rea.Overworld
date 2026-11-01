@@ -72,6 +72,28 @@ namespace MindAttic.Overworld.Tests
             Assert.AreEqual(45, presenter.Tiles.Count(t => t.Value.enabled));
         }
 
+        /// <summary>U.OVW-T29: the 2007 world's scenes and placed props, and the original area's tile grid hidden while they are shown.</summary>
+        [Test]
+        public void LandscapeDrawsTheStartAreasScenesAndPropsAndHidesTheOldTileGrid()
+        {
+            var content = ContentRegistry.Load(new DirectoryContentSource(OverworldBootstrap.ContentDirectory));
+            var world = content.PlayableWorld;
+            var areaId = world.Start.AreaId;
+            presenter.ShowLandscape(world, areaId);
+
+            var expectedScenes = world.Scenes.FindAll(s => s.AreaId == areaId).Count;
+            var expectedProps = world.AreaProps.FindAll(p => p.AreaId == areaId).Count;
+            Assert.AreEqual(expectedScenes + expectedProps, presenter.LandscapeRenderers.Count);
+
+            var library = new TextureLibrary();
+            foreach (var r in presenter.LandscapeRenderers)
+                Assert.IsNotNull(library.Load(presenter.FileOf(r)), presenter.FileOf(r) + " is not imported under Art/Resources");
+
+            // Hiding the old tile grid: Refresh (called every frame) never re-enables a tile once the landscape is shown.
+            presenter.Refresh();
+            Assert.IsTrue(presenter.Tiles.All(t => !t.Value.enabled), "the 2007 world replaces the small original area's tile grid");
+        }
+
         [Test]
         public void ObjectsAreLayeredBackToFrontByY()
         {

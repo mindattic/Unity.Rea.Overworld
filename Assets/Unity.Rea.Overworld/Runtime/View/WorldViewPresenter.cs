@@ -199,6 +199,9 @@ namespace MindAttic.Overworld.Runtime
 
         readonly List<MeshRenderer> landscapeRenderers = new List<MeshRenderer>();
 
+        /// <summary>Every scene and prop quad <see cref="ShowLandscape"/> drew, in the order it drew them (scenes then props).</summary>
+        public IReadOnlyList<MeshRenderer> LandscapeRenderers => landscapeRenderers;
+
         /// <summary>
         /// Whether <see cref="ShowLandscape"/> has drawn the 2007 world's own backdrop: while true, the small original
         /// area's hand-authored tile grid (<see cref="TilesOrder"/>) is hidden instead of drawn under it, the two being
