@@ -104,6 +104,7 @@ namespace MindAttic.Overworld.Runtime
         public OverworldAudio Audio { get; private set; }
         public WindowSettings Window { get; private set; }
         public GameOver GameOver { get; private set; }
+        public AreaEvents AreaEvents { get; private set; }
 
         public const string OptionsArgument = "-overworld-options";
         public const string HeroScreenArgument = "-overworld-hero-screen";
@@ -194,6 +195,8 @@ namespace MindAttic.Overworld.Runtime
             Messages.Install(game);
             // Lights.GameOver and Root.Reset (RECONSTRUCTION 6.5, U.OVW-T28): installed once every system it resets exists.
             GameOver = new GameOver(Party, Pickups, Inventory, Clock, Control, Messages, Interface).Install(game);
+            // Event rectangles, evaluated (RECONSTRUCTION 9.4, U.OVW-T30): the playable world's own events only.
+            AreaEvents = new AreaEvents(Content.PlayableWorld, Party, Scripts).Install(game);
             // loadOptions' first-run message box, queued ahead of the tutorial (RECONSTRUCTION 2.2, U.OVW-T27).
             if (Window.FirstRun) Messages.SayWelcome();
             // Engine's start-up queued the tutorial last, once everything had loaded.
