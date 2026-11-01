@@ -47,6 +47,26 @@ namespace MindAttic.Overworld.Tests
             for (var i = 0; i < n; i++) game.Step();
         }
 
+        /// <summary>Turns the ring one entry and steps until it settles (RingMenuTests' own pattern).</summary>
+        void Turn(int step)
+        {
+            Assert.IsTrue(game.Submit(new TurnRing(PlayerId.One, step)).Accepted);
+            var ring = party.RingOf(PlayerId.One);
+            var ticks = 0;
+            while (ring.Mode != RingMode.Select && ticks < 100)
+            {
+                game.Step();
+                ticks++;
+            }
+        }
+
+        /// <summary>Turns the ring from Move to Attack (one turn right: Move, End, Skill, Item, Attack is the left order, so right from Move reaches Attack directly).</summary>
+        void TurnToAttack()
+        {
+            Turn(1);
+            Assert.AreEqual(RingEntry.Attack, party.RingOf(PlayerId.One).SelectedEntry);
+        }
+
         EnemyView Find(string name)
         {
             foreach (var e in enemies.Enemies) if (e.Name == name) return e;
@@ -87,11 +107,11 @@ namespace MindAttic.Overworld.Tests
         public void AttackingAWerelynxInRangeDamagesItWearsTheWeaponAndPassesTheTurn()
         {
             var wolf = Find("Werelynx"); // range 0.8, class Animal
-            Assert.IsTrue(game.Submit(new PlaceHero(PlayerId.One, 0, wolf.X - 0.3f, wolf.Y)).Accepted);
+            Assert.IsTrue(game.Submit(new PlaceHero(PlayerId.One, 0, wolf.X - 0.05f, wolf.Y)).Accepted);
             Assert.IsTrue(game.Submit(new ToggleBattle(PlayerId.One)).Accepted); // enters battle, ring open at Move
             Steps(1);
             // Turn the ring to Attack (Move, End, Skill, Item, Attack: four turns right from Move).
-            for (var i = 0; i < 4; i++) Assert.IsTrue(game.Submit(new TurnRing(PlayerId.One, 1)).Accepted);
+            TurnToAttack();
             var fullDurability = chrono.WeaponDurability;
             var healthBefore = wolf.Health;
             var result = game.Submit(new ChooseFromRing(PlayerId.One));
@@ -110,10 +130,10 @@ namespace MindAttic.Overworld.Tests
         {
             var slime = Find("Blue Slime"); // max health 2
             slime.Health = 1;
-            Assert.IsTrue(game.Submit(new PlaceHero(PlayerId.One, 0, slime.X - 0.2f, slime.Y)).Accepted);
+            Assert.IsTrue(game.Submit(new PlaceHero(PlayerId.One, 0, slime.X - 0.05f, slime.Y)).Accepted);
             Assert.IsTrue(game.Submit(new ToggleBattle(PlayerId.One)).Accepted);
             Steps(1);
-            for (var i = 0; i < 4; i++) Assert.IsTrue(game.Submit(new TurnRing(PlayerId.One, 1)).Accepted);
+            TurnToAttack();
             game.Submit(new ChooseFromRing(PlayerId.One));
             Assert.AreEqual(0, slime.Health);
 
