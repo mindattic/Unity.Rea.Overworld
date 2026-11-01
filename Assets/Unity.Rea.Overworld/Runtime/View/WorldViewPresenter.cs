@@ -200,14 +200,23 @@ namespace MindAttic.Overworld.Runtime
         readonly List<MeshRenderer> landscapeRenderers = new List<MeshRenderer>();
 
         /// <summary>
+        /// Whether <see cref="ShowLandscape"/> has drawn the 2007 world's own backdrop: while true, the small original
+        /// area's hand-authored tile grid (<see cref="TilesOrder"/>) is hidden instead of drawn under it, the two being
+        /// alternative grounds for the same world, never both at once.
+        /// </summary>
+        bool landscapeShown;
+
+        /// <summary>
         /// Draws <paramref name="world"/>'s area <paramref name="areaId"/> landscape (U.OVW-T29; RECONSTRUCTION 16.2): every
         /// Scene as a picture quad at its place (width and the database's own half-height, Y its vertical centre), and every
         /// Area_Props placement (its <see cref="PropArtRecord"/>'s picture) the same way, each depth-sorted by its own Z
-        /// (more negative, nearer the camera, drawn over what is further). Scenes and props are static: built once.
+        /// (more negative, nearer the camera, drawn over what is further). Scenes and props are static: built once; the
+        /// original area's tile grid is hidden for as long as this is shown (see <see cref="landscapeShown"/>).
         /// </summary>
         public void ShowLandscape(WorldData world, int areaId)
         {
             if (world == null || landscapeRenderers.Count > 0) return;
+            landscapeShown = true;
             var root = new GameObject("Landscape").transform;
             root.SetParent(transform, false);
             foreach (var s in world.Scenes)
@@ -616,7 +625,7 @@ namespace MindAttic.Overworld.Runtime
                 material.color = new Color32(light.R, light.G, light.B, 255);
             }
 
-            foreach (var t in tiles) t.Value.enabled = View.IsVisible(t.Key) && HasTexture(t.Value);
+            foreach (var t in tiles) t.Value.enabled = !landscapeShown && View.IsVisible(t.Key) && HasTexture(t.Value);
             TentRenderer.enabled = View.IsVisible(View.Tent) && HasTexture(TentRenderer);
 
             if (Pickups != null)
