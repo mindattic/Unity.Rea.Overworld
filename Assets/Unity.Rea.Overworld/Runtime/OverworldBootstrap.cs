@@ -48,7 +48,7 @@ namespace MindAttic.Overworld.Runtime
     /// battle mode's <c>-overworld-battle</c> (see <see cref="ApplyScriptedBattle"/>) and <c>-overworld-ring</c> (see
     /// <see cref="ApplyScriptedRing"/>); the interface's <c>-overworld-options</c>, <c>-overworld-hero-screen</c>,
     /// <c>-overworld-pause</c>, <c>-overworld-fps-off</c>, <c>-overworld-hover</c> and <c>-overworld-loading</c> (see
-    /// <see cref="ApplyScriptedInterface"/>);
+    /// <see cref="ApplyScriptedInterface"/>); the sound's <c>-overworld-regen-test</c> (see <see cref="ApplyScriptedRegenTest"/>);
     /// <c>-overworld-capture &lt;file.png&gt;</c> saves a screenshot and quits, after a few frames or after
     /// <c>-overworld-capture-after &lt;seconds&gt;</c> of play. Any scripted argument (or a capture) leaves the real
     /// keyboard and mouse alone, so the system pointer is never taken.
@@ -76,6 +76,7 @@ namespace MindAttic.Overworld.Runtime
         public const string PickUpArgument = "-overworld-pickup";
         public const string ExaminePickupArgument = "-overworld-examine-pickup";
         public const string SeedArgument = "-overworld-seed";
+        public const string RegenTestArgument = "-overworld-regen-test";
 
         public ContentRegistry Content { get; private set; }
         public GameHost Host { get; private set; }
@@ -97,6 +98,8 @@ namespace MindAttic.Overworld.Runtime
         public Weather Weather { get; private set; }
         public Clouds Clouds { get; private set; }
         public InterfaceControl Interface { get; private set; }
+        public RegenTest RegenTest { get; private set; }
+        public OverworldAudio Audio { get; private set; }
 
         public const string OptionsArgument = "-overworld-options";
         public const string HeroScreenArgument = "-overworld-hero-screen";
@@ -163,6 +166,8 @@ namespace MindAttic.Overworld.Runtime
             // their scripts (HERO the item target, selectedHero) through the interpreter.
             Quests = new QuestLog(Content.Quests, Party) { Scripts = Scripts, ScriptHero = Scripts.TargetOf }.Install(game);
             Party.Install(game);
+            // F7 / F8 (RECONSTRUCTION 15, U.OVW-T26): Sound.vb's only wired sound effect, kept as the same global test tone.
+            RegenTest = new RegenTest().Install(game);
             // The options menu, hero screen, FPS counter and pause: commands only, no tick; while paused (Game.IsHeld) each system skips what the original's If Not bPause skipped.
             Interface = new InterfaceControl(Content.Hud, Party).Install(game);
             Scripts.Interface = Interface;
@@ -230,6 +235,11 @@ namespace MindAttic.Overworld.Runtime
             Input.Scripts = Scripts;
             Input.Interface = Interface;
             Input.transform.SetParent(transform, false);
+            // Sound (U.OVW-T26): Music.mp3 looping from the start, switching to Battle.mp3 in battle mode, the unused
+            // effects wired to their events, and zombies ambient looping in the "Entering Dark Woods" event box.
+            var darkWoods = Content.PlayableWorld?.Events.FirstOrDefault(ev => ev.Name == "Entering Dark Woods");
+            Audio = OverworldAudio.Create(Content.Audio, game, Party, darkWoods);
+            Audio.transform.SetParent(transform, false);
             // The developer tools (U.OVW-T47): off as shipped; -overworld-developer turns them on.
             InstallDeveloper(args, game);
             // The gamepad (U.OVW-US-A21): on from the start, J turns it off and on; -overworld-gamepad scripts a virtual pad.
@@ -258,7 +268,8 @@ namespace MindAttic.Overworld.Runtime
             var battled = ApplyScriptedBattle(args, game);
             battled |= ApplyScriptedRing(args, game);
             var shown = ApplyScriptedInterface(args, game);
-            if (scripted.HasValue || scriptedView || recalled || party || vitals || rested || picked || packed || typed || quested || read || weathered || battled || shown || seeded || capture != null) Input.UseDevices = false;
+            var soundTested = ApplyScriptedRegenTest(args, game);
+            if (scripted.HasValue || scriptedView || recalled || party || vitals || rested || picked || packed || typed || quested || read || weathered || battled || shown || soundTested || seeded || capture != null) Input.UseDevices = false;
 
             // frmMain showed a random loading picture while the engine loaded; real play holds it a moment, scripted runs
             // skip it unless -overworld-loading asks for it.
@@ -1124,6 +1135,19 @@ namespace MindAttic.Overworld.Runtime
             if (text == null) return false;
             if (TryWeather(text, out var kind, out var seconds)) StartCoroutine(WeatherAfter(game, kind, seconds));
             else Debug.LogError("Unity.Overworld: " + WeatherArgument + " wants snowing, raining, clear, leaves or dust and optionally the seconds to wait, not '" + text + "'.");
+            return true;
+        }
+
+        /// <summary>
+        /// Applies <c>-overworld-regen-test</c> (U.OVW-T26): presses F7, so a capture or log shows the regen test playing
+        /// (<see cref="RegenTest.Playing"/>); true when given.
+        /// </summary>
+        bool ApplyScriptedRegenTest(string[] args, Game game)
+        {
+            if (!HasFlag(args, RegenTestArgument)) return false;
+            var result = game.Submit(new PlayRegenTest(PlayerId.One));
+            if (result.Accepted) Debug.Log("Unity.Overworld: scripted regen test, playing " + RegenTest.Playing);
+            else Debug.LogError("Unity.Overworld: " + RegenTestArgument + " was refused: " + result.Reason);
             return true;
         }
 

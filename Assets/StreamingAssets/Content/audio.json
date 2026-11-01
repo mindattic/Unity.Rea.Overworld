@@ -1,0 +1,25 @@
+{
+  "_source": "sfx/* (RECONSTRUCTION 15; BIBLE 'Music never plays'): Sound.vb's volumes and the sound files the rebuild wires to the events they were evidently made for. music.wma (the mp3 ships) and ruby.avi (the video is never shown) are not imported. Centibels are DirectSound's hundredths of a decibel below full, as Sound.vb set them.",
+  "musicCentibels": 0,
+  "effectCentibels": -1000,
+  "ambientCentibels": -1500,
+  "music": "sfx/music/Music.mp3",
+  "battleMusic": "sfx/music/Battle.mp3",
+  "ambientZombies": "sfx/ambient/zombies.mp3",
+  "regen": "sfx/hero/regen.wav",
+  "walkFootsteps": ["sfx/footstep_1.wav", "sfx/footstep_2.wav"],
+  "runFootstep": "sfx/hero/heavy_footstep.wav",
+  "swordDraw": "sfx/hero/attack/sword_draw.wav",
+  "swordSwing": [
+    "sfx/hero/attack/sword_swing_1.wav",
+    "sfx/hero/attack/sword_swing_2.wav",
+    "sfx/hero/attack/sword_swing_3.wav",
+    "sfx/hero/attack/sword_swing_4.wav",
+    "sfx/hero/attack/sword_swing_5.wav",
+    "sfx/hero/attack/sword_swing_6.wav",
+    "sfx/hero/attack/sword_swing_7.wav"
+  ],
+  "swordHit": ["sfx/hero/attack/sword_hit_1.wav", "sfx/hero/attack/sword_hit_2.wav", "sfx/hero/attack/sword_hit_3.wav"],
+  "charge": "sfx/hero/charge.wav",
+  "death": ["sfx/death_1.wav", "sfx/death_2.wav", "sfx/death_3.wav", "sfx/death_4.wav"]
+}

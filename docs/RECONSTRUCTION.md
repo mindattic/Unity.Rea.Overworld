@@ -650,6 +650,13 @@ A debug aid: in "set" mode the hero drops a 0.02 `path.png` dot every 0.05 units
 - 38 sound files ship: `sfx\music\{Battle.mp3, Music.mp3, music.wma}`, `sfx\ambient\zombies.mp3`, `sfx\ruby.avi`, `sfx\death_1..4.wav`, `defend.wav`, `footstep_1..2.wav`, `sword_hit_1..3.wav`, `sword_swing_1..7.wav`
   (duplicates of those under `hero\attack`), `sfx\hero\{charge,footstep,heavy_footstep,jump,regen}.wav`, `sfx\hero\attack\{sword_draw,sword_hit_1..3,sword_swing_1..7}.wav`. Only `regen.wav` and `music.mp3` (never played) are referenced.
 
+What the rebuild fixes (U.OVW-T26; BIBLE "Music never plays"): music plays and loops, switching to Battle.mp3 in battle
+mode; the `hero/attack` sword set, the footstep pair, heavy_footstep, charge and death_1..4 are wired to the hero events
+they are evidently made for; zombies ambient loops in the "Entering Dark Woods" event box; F7 / F8 keep playing and
+stopping regen.wav exactly as `Sound.vb` did. `jump.wav`, `defend.wav` and the root-level `sword_hit_1..3.wav` /
+`sword_swing_1..7.wav` duplicates stay imported but unplayed: the BIBLE row says why. music.wma and ruby.avi are not
+imported (the mp3 ships; the video is never shown).
+
 ## 16. Data files in full
 
 ### 16.1 `data\world.mdb` (the engine's database; 2006-02-21)

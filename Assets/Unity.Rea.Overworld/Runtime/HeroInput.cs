@@ -40,6 +40,7 @@ namespace MindAttic.Overworld.Runtime
         InputAction previousHero, nextHero, team, select, rest, confirm, previousItem, nextItem;
         InputAction inventory, drop, quickBar, questScreen, book, nextBook, weather, battle;
         InputAction options, fps, pause, heroScreen;
+        InputAction regenTest, regenTestStop;
         readonly InputAction[] quickKeys = new InputAction[10];
         Vector2? scriptedMouse;
         int scriptedWheelSent;
@@ -137,6 +138,9 @@ namespace MindAttic.Overworld.Runtime
             fps = Button("Fps", "<Keyboard>/f4");
             pause = Button("Pause", "<Keyboard>/pause");
             heroScreen = Button("HeroScreen", "<Keyboard>/pageUp");
+            // Sound.vb's F7 / F8 (RECONSTRUCTION 15, U.OVW-T26): a frmMain-style key, read the same as weather's W.
+            regenTest = Button("RegenTest", "<Keyboard>/f7");
+            regenTestStop = Button("RegenTestStop", "<Keyboard>/f8");
             // 1 to 9 then 0: quick slots 0 to 9.
             for (var i = 0; i < quickKeys.Length; i++) quickKeys[i] = Button("Quick" + (i + 1) % 10, "<Keyboard>/digit" + (i + 1) % 10);
         }
@@ -173,7 +177,7 @@ namespace MindAttic.Overworld.Runtime
             left, right, up, down, run, move, point,
             motion, wheel, zoom, fast, examine, freeCamera, isometric, deisometric, strafeLeft, strafeRight, strafeUp, strafeDown,
             previousHero, nextHero, team, select, rest, confirm, previousItem, nextItem, inventory, drop, quickBar, questScreen, book, nextBook, weather, battle,
-            options, fps, pause, heroScreen,
+            options, fps, pause, heroScreen, regenTest, regenTestStop,
             quickKeys[0], quickKeys[1], quickKeys[2], quickKeys[3], quickKeys[4], quickKeys[5], quickKeys[6], quickKeys[7], quickKeys[8], quickKeys[9],
         };
 
@@ -239,6 +243,9 @@ namespace MindAttic.Overworld.Runtime
             var consoleWasOpen = Scripts != null && Scripts.For(Player).ConsoleOpen;
             if (UseDevices && Scripts != null) SendConsoleKeys();
             if (UseDevices && !consoleWasOpen && weather.WasPressedThisFrame()) Game.Submit(new CycleWeather(Player));
+            // F7 / F8 (RECONSTRUCTION 15, U.OVW-T26): Sound.vb's regen test, read like W with the console shut.
+            if (UseDevices && !consoleWasOpen && regenTest.WasPressedThisFrame()) Game.Submit(new PlayRegenTest(Player));
+            if (UseDevices && !consoleWasOpen && regenTestStop.WasPressedThisFrame()) Game.Submit(new StopRegenTest(Player));
             // J was a frmMain key too: the gamepad off and on (U.OVW-US-A21).
             if (UseDevices && !consoleWasOpen) JoystickKey();
             // The developer tools' frmMain keys (U.OVW-T47): with the console shut and the game not paused.

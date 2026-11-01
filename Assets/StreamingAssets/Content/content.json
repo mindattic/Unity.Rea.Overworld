@@ -20,5 +20,6 @@
   "hud": "hud.json",
   "scripts": "scripts.json",
   "developer": "developer.json",
-  "gamepad": "gamepad.json"
+  "gamepad": "gamepad.json",
+  "audio": "audio.json"
 }
