@@ -79,11 +79,15 @@
         },
         "walk": {
           "left": ["gfx/hero/girl/walk/walk_left1.png", "gfx/hero/girl/walk/walk_left2.png", "gfx/hero/girl/walk/walk_left3.png", "gfx/hero/girl/walk/walk_left4.png", "gfx/hero/girl/walk/walk_left5.png", "gfx/hero/girl/walk/walk_left6.png"],
-          "right": ["gfx/hero/girl/walk/walk_right1.png", "gfx/hero/girl/walk/walk_right2.png", "gfx/hero/girl/walk/walk_right3.png", "gfx/hero/girl/walk/walk_right4.png", "gfx/hero/girl/walk/walk_right5.png", "gfx/hero/girl/walk/walk_right6.png"]
+          "right": ["gfx/hero/girl/walk/walk_right1.png", "gfx/hero/girl/walk/walk_right2.png", "gfx/hero/girl/walk/walk_right3.png", "gfx/hero/girl/walk/walk_right4.png", "gfx/hero/girl/walk/walk_right5.png", "gfx/hero/girl/walk/walk_right6.png"],
+          "up": ["gfx/hero/girl/walk/walk_right1.png", "gfx/hero/girl/walk/walk_right2.png", "gfx/hero/girl/walk/walk_right3.png", "gfx/hero/girl/walk/walk_right4.png", "gfx/hero/girl/walk/walk_right5.png", "gfx/hero/girl/walk/walk_right6.png"],
+          "down": ["gfx/hero/girl/walk/walk_left1.png", "gfx/hero/girl/walk/walk_left2.png", "gfx/hero/girl/walk/walk_left3.png", "gfx/hero/girl/walk/walk_left4.png", "gfx/hero/girl/walk/walk_left5.png", "gfx/hero/girl/walk/walk_left6.png"]
         },
         "run": {
           "left": ["gfx/hero/girl/run/run_left1.png", "gfx/hero/girl/run/run_left2.png", "gfx/hero/girl/run/run_left3.png", "gfx/hero/girl/run/run_left4.png", "gfx/hero/girl/run/run_left5.png", "gfx/hero/girl/run/run_left6.png"],
-          "right": ["gfx/hero/girl/run/run_right1.png", "gfx/hero/girl/run/run_right2.png", "gfx/hero/girl/run/run_right3.png", "gfx/hero/girl/run/run_right4.png", "gfx/hero/girl/run/run_right5.png", "gfx/hero/girl/run/run_right6.png"]
+          "right": ["gfx/hero/girl/run/run_right1.png", "gfx/hero/girl/run/run_right2.png", "gfx/hero/girl/run/run_right3.png", "gfx/hero/girl/run/run_right4.png", "gfx/hero/girl/run/run_right5.png", "gfx/hero/girl/run/run_right6.png"],
+          "up": ["gfx/hero/girl/run/run_right1.png", "gfx/hero/girl/run/run_right2.png", "gfx/hero/girl/run/run_right3.png", "gfx/hero/girl/run/run_right4.png", "gfx/hero/girl/run/run_right5.png", "gfx/hero/girl/run/run_right6.png"],
+          "down": ["gfx/hero/girl/run/run_left1.png", "gfx/hero/girl/run/run_left2.png", "gfx/hero/girl/run/run_left3.png", "gfx/hero/girl/run/run_left4.png", "gfx/hero/girl/run/run_left5.png", "gfx/hero/girl/run/run_left6.png"]
         },
         "draw": {
           "left": ["gfx/hero/girl/stand/face_left.png"],
