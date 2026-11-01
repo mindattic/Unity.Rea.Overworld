@@ -122,6 +122,25 @@ namespace MindAttic.Overworld.Core
 
         public IReadOnlyList<EnemyView> Enemies => enemies;
 
+        /// <summary>The nearest living enemy within <paramref name="range"/> of (x, y), or null (U.OVW-T33, the ring menu's Attack).</summary>
+        public EnemyView NearestInRange(float x, float y, float range)
+        {
+            EnemyView nearest = null;
+            var nearestDistance = float.MaxValue;
+            foreach (var e in enemies)
+            {
+                if (e.Health <= 0) continue;
+                var d = Distance(x, y, e.X, e.Y);
+                if (d <= range && d < nearestDistance)
+                {
+                    nearest = e;
+                    nearestDistance = d;
+                }
+            }
+
+            return nearest;
+        }
+
         public WorldEnemies Install(Game game)
         {
             if (game == null) throw new ArgumentNullException(nameof(game));
@@ -136,6 +155,7 @@ namespace MindAttic.Overworld.Core
 
             foreach (var enemy in enemies)
             {
+                if (enemy.Health <= 0) continue; // defeated (U.OVW-T33): holds still, drawn no more
                 Hero target = null;
                 var nearestDistance = float.MaxValue;
                 foreach (var player in game.Players)

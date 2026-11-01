@@ -711,7 +711,7 @@ namespace MindAttic.Overworld.Runtime
             {
                 kv.Value.transform.localPosition = new Vector3(kv.Key.X, kv.Key.Y, 0f);
                 SetTexture(kv.Value, kv.Key.Sprite);
-                kv.Value.enabled = View.Camera.InRange(kv.Key.X, kv.Key.Y) && HasTexture(kv.Value);
+                kv.Value.enabled = kv.Key.Health > 0 && View.Camera.InRange(kv.Key.X, kv.Key.Y) && HasTexture(kv.Value);
             }
 
             if (Party != null) Poses = View.Poses(Party, game != null ? game.Alpha : 1f);

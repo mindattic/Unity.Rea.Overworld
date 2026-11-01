@@ -602,6 +602,13 @@ namespace MindAttic.Overworld.Core
 
         bool BookShownFor(PlayerId player) => BookShown != null && BookShown(player);
 
+        /// <summary>
+        /// The nearest world enemy within (x, y, range) of a point, or null (U.OVW-T33): the ring menu's Attack asks this
+        /// of <see cref="WorldEnemies"/>, which Party has no reference to itself (it is a world-level system, not the
+        /// party's). Null: Attack finds nothing, as the original's always did.
+        /// </summary>
+        public Func<float, float, float, EnemyView> FindEnemyInRange { get; set; }
+
         /// <summary>The party's experience (Root.Experience): the quests' rewards add to it; nothing in the original spent it.</summary>
         public int Experience { get; internal set; }
 
