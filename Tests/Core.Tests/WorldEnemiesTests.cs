@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using MindAttic.Overworld.Core;
 using NUnit.Framework;
+using StringAssert = NUnit.Framework.Legacy.StringAssert;
 
 namespace MindAttic.Overworld.Tests
 {
