@@ -43,6 +43,7 @@ namespace MindAttic.Overworld.Runtime
         InputAction regenTest, regenTestStop;
         InputAction fullScreen;
         InputAction resetGame;
+        InputAction spritePack;
 
         /// <summary>The window's saved width, height, depth and mode (RECONSTRUCTION 2.2, U.OVW-T27); null reads no F12 key.</summary>
         public WindowSettings Window { get; set; }
