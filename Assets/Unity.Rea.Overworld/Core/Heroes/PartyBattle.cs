@@ -227,7 +227,7 @@ namespace MindAttic.Overworld.Core
         {
             hero.DX = 0f;
             hero.DY = 0f;
-            Animate(hero, now, hero.Definition.BattleRate, Sprites.Battle(hero.Facing), hero.Definition.BattleFrames);
+            Animate(hero, now, hero.Definition.BattleRate, SpritesFor(hero).Battle(hero.Facing), BattleFramesFor(hero));
         }
     }
 }
