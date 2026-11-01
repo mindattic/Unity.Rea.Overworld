@@ -752,6 +752,10 @@ exit yet moves the party there.
 
 `Npc` (id, name, width, height, art): 1 Peasent Woman (sic) 0.144 x 0.072 `\gfx\npc\woman\`; 2 Magitek Armor 0.144 x 0.072 `\gfx\npc\magitek\`. `Area_Npcs` (area 1): npc 1 at (1,-0.2) state "stand"; npc 2 at (4,-0.2) state "pursue".
 
+What the rebuild builds (U.OVW-T31; BIBLE "NPCs met"): both are placed and drawn (the woman's still front picture, the
+Magitek's walk-right cycle run in place); actually following the leader (the row above, "NPC states") is the NPC
+encounters story (U.OVW-T32), not this one.
+
 `Enemy` (id, name, max HP, move speed, range, state, motion, class): 1 Werelynx 6, 0.004, 0.8, Defensive, Walking, Animal; 2 Botherfly 3, 0.006, 1.4, Aggressive, Flying, Insect; 3 Blue Slime 2, 0.003, 0.4, Passive, Walking, Paranormal;
 4 Red Slime 5, 0.004, 0.7, Defensive, Walking, Paranormal; 5 Toadie 4, 0.05, 0.4, Aggressive, Hopping, Reptile. `Enemy_Class`: Paranormal, Animal, Reptile, Insect, Mechanical. `Enemy_Motion`: Walking, Flying, Hopping, Teleporting, Stationary, Swimming.
 `Enemy_State`: Passive, Aggressive, Afraid, Defensive. `Area_Enemies` and `Enemy_Images`: empty tables (their columns: enemy id, x, y, z; and stand/walk/attack/hurt left/right image names).
