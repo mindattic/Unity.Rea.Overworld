@@ -605,6 +605,12 @@ Two are defined (`maxWeapons` 100 reserved):
 Each hero has a weapon overlay quad at the hero's position showing the weapon frame in step with the hero's draw or battle frame (left set for Left/Down, right for Right/Up); it is blank in any other state. There is no damage code, no enemy and no attack action anywhere in the source.
 The weapon sprite folders also hold `defend_left/right.png`, katana, longsword and axeold sets (unused).
 
+What the rebuild builds (U.OVW-T33; BIBLE "Combat"): choosing Attack in the ring menu resolves a hit against a living
+enemy within the weapon's own Range (rating weighted by its slashing / piercing / blunt split against the target's
+class, a table this ticket's own decision), wears the hero's own copy of the weapon's durability by 1, and passes the
+turn; an acting enemy in contact hits back at the Poison Box's own rate. None of this is a port — the original never
+wrote any of it — so every figure is documented where it is defined (Core `Combat`), not here.
+
 ## 13. HUD and screens
 
 All HUD quads are screen-space (640 x 480 reference). `Write` uses D3DX fonts: Arial 10 bold (`fontArial`), Calisto MT 8 bold, Arial Narrow 24 and 14 bold, Small Fonts 7, Monotype Corsiva 8 italic and 12 italic, Symbol 10.
