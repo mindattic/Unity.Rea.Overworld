@@ -256,6 +256,18 @@ Flags per hero: moveLeft/Right/Up/Down, PickingUp, Resting, Burdened, Kneeling, 
   `halt\halt_left|right.png`, `kneel\kneel_*.png`, `kneel\sleep_left|right.png`, `combat\draw\draw_{left,right}_1..6.png`,
   `combat\battle_{left,right}_1..6.png`. (Up/down draw and battle sets are declared but not loaded; they use the left/right sets.)
 
+What the rebuild builds (U.OVW-T35; BIBLE "Hero sprites"): the original's own unused Belmont and girl sprite sets
+(`gfx\hero\belmont\...`, `gfx\hero\girl\...` on disk, never opened by any loader) are read as `Party.SpritePacks`
+(content `sprite-packs.json`, each pack a `walkFrames`/`runFrames`/`drawFrames`/`battleFrames` count and a "sprites"
+block in heroes.json's own shape, so the engine's one `HeroSprites` class draws them exactly as it draws the default
+set) and given to one hero at a time with `SelectSpritePack`, which also resets that hero's frame; null clears it back
+to the shared Chrono set every hero drew with before this ticket. A pose neither set ever had falls back to the
+nearest one that does, not invented art: Belmont's draw and battle both reuse its one seven-frame attack cycle, and
+its sleep reuses its kneel picture; the girl set, with no attack or kneel art at all, reuses its stand picture for
+kneel, sleep, draw and battle alike. Up and down reuse right and left respectively for both packs, as Halt already
+does for every hero. F6 (`HeroInput`) cycles the player's leader through default, Belmont, Girl and back; a scripted
+run sets it directly with `-overworld-sprite-pack <name|off>`. Core `SpritePackTests`.
+
 ### 4.5 Follow, recall, flocking (`checkfollow`, `recallHero`, `checkFlocking`)
 
 For every hero that is not the current one and not in battle, when team mode is on (`bTeam`, default True):
