@@ -65,6 +65,7 @@ namespace MindAttic.Overworld.Tests
         public void ContainsTestsTheBoxWithTheOriginAdded()
         {
             var e = Find("Poison Box");
+            Console.WriteLine($"X={e.X} Y={e.Y} Left={e.Left} Right={e.Right} Top={e.Top} Bottom={e.Bottom} HasOrigin={e.HasOrigin}");
             Assert.IsTrue(AreaEvents.Contains(e, e.X, e.Y));
             Assert.IsTrue(AreaEvents.Contains(e, e.X + e.Left, e.Y + e.Top));
             Assert.IsFalse(AreaEvents.Contains(e, e.X + e.Left - 0.001f, e.Y));
