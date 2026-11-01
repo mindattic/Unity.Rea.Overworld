@@ -781,6 +781,10 @@ simply keeps acting Aggressive.
 `Weapon` (id, name, power, random, class, durability, max durability, directory): 4 Axe 4, 3, 2, 24, 0 `\gfx\weapon\axe\`; 1 Steel Sword 1, 1, 1, 10, 10 `\gfx\weapon\steelsword\`; 2 Katana 2, 1, 1, 13, 0 `\gfx\weapon\katana\`; 3 Broad Sword 3, 2, 1, 24, 0 `\gfx\weapon\broadsword\`.
 Empty tables: `Armor` (hero, head, body, arms, feet ids), `Armor_Head|Body|Arms|Feet` (id, name, defence, random, durability, max durability, description), `Relic` (id, name, description, STR/INT/SPD/AGI modifiers), `Weapon_class` (id, name).
 
+What the rebuild builds (U.OVW-T34; BIBLE "Equipping Alexander"): Alexander, shown and equippable on the hero screen
+(Core Equipment cycles his four weapons), the empty armour and relic slots shown as "none" rather than invented. He is
+hero.mdb's own hero, not a fourth member of Chrono, Belmont and Flagg's party, and never joins a battle.
+
 ### 16.4 Settings that were data in the registry
 
 `Software\MindAttic\Overhead`: Width, Height, Depth, isWindowMode. `video.cfg`: Windowed? 0, Screen Width? 640, Screen Height? 480, Color Depth? 16 (the unused legacy form).
