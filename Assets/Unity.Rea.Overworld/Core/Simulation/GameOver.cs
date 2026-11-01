@@ -116,15 +116,7 @@ namespace MindAttic.Overworld.Core
 
             if (view != null)
                 foreach (var p in game.Players)
-                {
-                    var camera = view.For(p)?.Camera;
-                    if (camera != null)
-                    {
-                        camera.X = 0f;
-                        camera.Y = 0f;
-                        camera.Z = -1f;
-                    }
-                }
+                    view.For(p)?.Camera?.MoveTo(0f, 0f, -1f);
 
             party.RestoreAfterGameOver(tick, events);
             foreach (var p in game.Players) fadeOut[p] = FadeStart;

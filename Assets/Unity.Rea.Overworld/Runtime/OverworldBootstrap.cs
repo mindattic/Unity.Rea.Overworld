@@ -213,6 +213,7 @@ namespace MindAttic.Overworld.Runtime
             World.ShowCursor(Viewpoint.Cursor);
             World.LightBy(Clock);
             World.DimBy(Sleep);
+            World.FadeBy(GameOver);
             World.ShowPickups(Pickups);
             World.ShowWeather(Weather, game);
             World.ShowClouds(Clouds, game);
