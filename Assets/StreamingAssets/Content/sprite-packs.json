@@ -1,0 +1,95 @@
+{
+  "_source": "RECONSTRUCTION 4.4; BIBLE 'Selectable sprite packs' (U.OVW-T35): the original's own unused Belmont (side-view jump/dash prototype) and girl sprite sets, read in heroes.json's own 'sprites' shape so the same HeroSprites class draws them. Up and down reuse the nearest side (right, left), as the engine's own Halt already does; a pose neither set ever had (kneel, sleep, a weapon draw or battle stance) reuses the nearest one that does exist rather than inventing art. walkFrames/runFrames/drawFrames/battleFrames are each one less than the number of frames listed, matching heroes.json's own convention.",
+  "packs": [
+    {
+      "name": "Belmont",
+      "walkFrames": 5,
+      "runFrames": 5,
+      "drawFrames": 6,
+      "battleFrames": 6,
+      "sprites": {
+        "stand": {
+          "left": "gfx/hero/belmont/stand/face_left.PNG",
+          "right": "gfx/hero/belmont/stand/face_right.PNG",
+          "up": "gfx/hero/belmont/stand/face_right.PNG",
+          "down": "gfx/hero/belmont/stand/face_left.PNG"
+        },
+        "halt": {
+          "left": "gfx/hero/belmont/halt/halt_left.PNG",
+          "right": "gfx/hero/belmont/halt/halt_right.PNG"
+        },
+        "kneel": {
+          "left": "gfx/hero/belmont/kneel/kneel_left.PNG",
+          "right": "gfx/hero/belmont/kneel/kneel_right.PNG",
+          "up": "gfx/hero/belmont/kneel/kneel_right.PNG",
+          "down": "gfx/hero/belmont/kneel/kneel_left.PNG"
+        },
+        "sleep": {
+          "left": "gfx/hero/belmont/kneel/kneel_left.PNG",
+          "right": "gfx/hero/belmont/kneel/kneel_right.PNG"
+        },
+        "walk": {
+          "left": ["gfx/hero/belmont/walk/run_left1.PNG", "gfx/hero/belmont/walk/run_left2.PNG", "gfx/hero/belmont/walk/run_left3.PNG", "gfx/hero/belmont/walk/run_left4.PNG", "gfx/hero/belmont/walk/run_left5.PNG", "gfx/hero/belmont/walk/run_left6.PNG"],
+          "right": ["gfx/hero/belmont/walk/run_right1.PNG", "gfx/hero/belmont/walk/run_right2.PNG", "gfx/hero/belmont/walk/run_right3.PNG", "gfx/hero/belmont/walk/run_right4.PNG", "gfx/hero/belmont/walk/run_right5.PNG", "gfx/hero/belmont/walk/run_right6.PNG"]
+        },
+        "run": {
+          "left": ["gfx/hero/belmont/run/run_left1.PNG", "gfx/hero/belmont/run/run_left2.PNG", "gfx/hero/belmont/run/run_left3.PNG", "gfx/hero/belmont/run/run_left4.PNG", "gfx/hero/belmont/run/run_left5.PNG", "gfx/hero/belmont/run/run_left6.PNG"],
+          "right": ["gfx/hero/belmont/run/run_right1.PNG", "gfx/hero/belmont/run/run_right2.PNG", "gfx/hero/belmont/run/run_right3.PNG", "gfx/hero/belmont/run/run_right4.PNG", "gfx/hero/belmont/run/run_right5.PNG", "gfx/hero/belmont/run/run_right6.PNG"]
+        },
+        "draw": {
+          "left": ["gfx/hero/belmont/attack/attack_left1.PNG", "gfx/hero/belmont/attack/attack_left2.PNG", "gfx/hero/belmont/attack/attack_left3.PNG", "gfx/hero/belmont/attack/attack_left4.PNG", "gfx/hero/belmont/attack/attack_left5.PNG", "gfx/hero/belmont/attack/attack_left6.PNG", "gfx/hero/belmont/attack/attack_left7.PNG"],
+          "right": ["gfx/hero/belmont/attack/attack_right1.PNG", "gfx/hero/belmont/attack/attack_right2.PNG", "gfx/hero/belmont/attack/attack_right3.PNG", "gfx/hero/belmont/attack/attack_right4.PNG", "gfx/hero/belmont/attack/attack_right5.PNG", "gfx/hero/belmont/attack/attack_right6.PNG", "gfx/hero/belmont/attack/attack_right7.PNG"]
+        },
+        "battle": {
+          "left": ["gfx/hero/belmont/attack/attack_left1.PNG", "gfx/hero/belmont/attack/attack_left2.PNG", "gfx/hero/belmont/attack/attack_left3.PNG", "gfx/hero/belmont/attack/attack_left4.PNG", "gfx/hero/belmont/attack/attack_left5.PNG", "gfx/hero/belmont/attack/attack_left6.PNG", "gfx/hero/belmont/attack/attack_left7.PNG"],
+          "right": ["gfx/hero/belmont/attack/attack_right1.PNG", "gfx/hero/belmont/attack/attack_right2.PNG", "gfx/hero/belmont/attack/attack_right3.PNG", "gfx/hero/belmont/attack/attack_right4.PNG", "gfx/hero/belmont/attack/attack_right5.PNG", "gfx/hero/belmont/attack/attack_right6.PNG", "gfx/hero/belmont/attack/attack_right7.PNG"]
+        }
+      }
+    },
+    {
+      "name": "Girl",
+      "walkFrames": 5,
+      "runFrames": 5,
+      "drawFrames": 0,
+      "battleFrames": 0,
+      "sprites": {
+        "stand": {
+          "left": "gfx/hero/girl/stand/face_left.png",
+          "right": "gfx/hero/girl/stand/face_right.png",
+          "up": "gfx/hero/girl/stand/face_right.png",
+          "down": "gfx/hero/girl/stand/face_left.png"
+        },
+        "halt": {
+          "left": "gfx/hero/girl/halt/halt_left.png",
+          "right": "gfx/hero/girl/halt/halt_right.png"
+        },
+        "kneel": {
+          "left": "gfx/hero/girl/stand/face_left.png",
+          "right": "gfx/hero/girl/stand/face_right.png",
+          "up": "gfx/hero/girl/stand/face_right.png",
+          "down": "gfx/hero/girl/stand/face_left.png"
+        },
+        "sleep": {
+          "left": "gfx/hero/girl/stand/face_left.png",
+          "right": "gfx/hero/girl/stand/face_right.png"
+        },
+        "walk": {
+          "left": ["gfx/hero/girl/walk/walk_left1.png", "gfx/hero/girl/walk/walk_left2.png", "gfx/hero/girl/walk/walk_left3.png", "gfx/hero/girl/walk/walk_left4.png", "gfx/hero/girl/walk/walk_left5.png", "gfx/hero/girl/walk/walk_left6.png"],
+          "right": ["gfx/hero/girl/walk/walk_right1.png", "gfx/hero/girl/walk/walk_right2.png", "gfx/hero/girl/walk/walk_right3.png", "gfx/hero/girl/walk/walk_right4.png", "gfx/hero/girl/walk/walk_right5.png", "gfx/hero/girl/walk/walk_right6.png"]
+        },
+        "run": {
+          "left": ["gfx/hero/girl/run/run_left1.png", "gfx/hero/girl/run/run_left2.png", "gfx/hero/girl/run/run_left3.png", "gfx/hero/girl/run/run_left4.png", "gfx/hero/girl/run/run_left5.png", "gfx/hero/girl/run/run_left6.png"],
+          "right": ["gfx/hero/girl/run/run_right1.png", "gfx/hero/girl/run/run_right2.png", "gfx/hero/girl/run/run_right3.png", "gfx/hero/girl/run/run_right4.png", "gfx/hero/girl/run/run_right5.png", "gfx/hero/girl/run/run_right6.png"]
+        },
+        "draw": {
+          "left": ["gfx/hero/girl/stand/face_left.png"],
+          "right": ["gfx/hero/girl/stand/face_right.png"]
+        },
+        "battle": {
+          "left": ["gfx/hero/girl/stand/face_left.png"],
+          "right": ["gfx/hero/girl/stand/face_right.png"]
+        }
+      }
+    }
+  ]
+}
