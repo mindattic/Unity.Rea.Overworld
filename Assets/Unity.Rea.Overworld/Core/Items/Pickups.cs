@@ -228,6 +228,12 @@ namespace MindAttic.Overworld.Core
         /// <summary>Every drop slot used so far, by slot (picked-up ones are free for the next drop).</summary>
         public IReadOnlyList<DroppedItem> Drops => drops;
 
+        /// <summary>Root.Reset's pickup loop: every world pickup returns (drops, a rebuild-only concept, are untouched, as the original's loop only ran over the pickup array).</summary>
+        internal void RestoreAllPickedUp()
+        {
+            foreach (var p in pickups) p.PickedUp = false;
+        }
+
         /// <summary>
         /// Inventory.checkDrop: a copy of <paramref name="stack"/>'s item falls at <paramref name="hero"/>'s position plus
         /// the drop spread times a random fraction (x then y), into the first free drop slot (the original's next slot, which

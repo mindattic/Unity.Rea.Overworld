@@ -107,5 +107,12 @@ namespace MindAttic.Overworld.Core
             items[a] = items[b];
             items[b] = t;
         }
+
+        /// <summary>Root.Reset's items loop: every stack is removed and the weight carried back to 0. Gold is untouched (the original never reset it either).</summary>
+        internal void Clear()
+        {
+            items.Clear();
+            Weight = 0f;
+        }
     }
 }

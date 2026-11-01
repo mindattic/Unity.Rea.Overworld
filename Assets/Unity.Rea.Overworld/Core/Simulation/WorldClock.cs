@@ -217,6 +217,14 @@ namespace MindAttic.Overworld.Core
         /// <summary>CHANGE LIGHT RED / GREEN / BLUE: the light is set (each minute then steps it toward the period's colour again).</summary>
         internal void SetLight(LightColour light) => Light = light;
 
+        /// <summary>Root.Reset's part of the clock (RECONSTRUCTION 6.5, U.OVW-T28): game speed back to 1 and the day period Morning; the date and time are untouched (the original never restored them either).</summary>
+        internal void ResetForGameOver()
+        {
+            GameSpeed = 1f;
+            var morning = Data.Period("Morning");
+            if (morning != null) Period = morning;
+        }
+
         /// <summary>An online client's screen shows the authority's time and light (<see cref="WorldMirror"/>, U.OVW-T51); the period is the one the hour is in, unannounced.</summary>
         internal void Mirror(DateTime now, LightColour light)
         {

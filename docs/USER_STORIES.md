@@ -112,3 +112,4 @@ updated: 2026-10-23
 | U.OVW-T59 | 2026-10-31 | chore | closed | Add WindowSettings.cs, WindowSettings.cs.meta; Update HeroInput.cs, OverworldBootstrap.cs, InterfaceTests.cs | — |
 | U.OVW-T60 | 2026-10-31 | chore | closed | Update WindowSettings.cs, BIBLE.md, RECONSTRUCTION.md | — |
 | U.OVW-T61 | 2026-10-31 | docs | closed | Update USER_STORIES.md | — |
+| U.OVW-T62 | 2026-10-31 | chore | closed | Add PartyGameOver.cs, GameOver.cs; Update Inventory.cs, Pickups.cs, WorldClock.cs | — |
