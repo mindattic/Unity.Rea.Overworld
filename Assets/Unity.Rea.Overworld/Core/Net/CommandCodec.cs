@@ -138,6 +138,7 @@ namespace MindAttic.Overworld.Core
             catch (EndOfStreamException) { return null; }
             catch (IOException) { return null; }
             catch (ArgumentException) { return null; }
+            catch (FormatException) { return null; } // a malformed string length (ReadString's 7-bit prefix)
         }
 
         static ICommand Read(Kind kind, BinaryReader r, PlayerId p)

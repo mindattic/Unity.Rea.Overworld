@@ -13,6 +13,16 @@ namespace MindAttic.Overworld.Core
         internal void RestoreAfterGameOver(long tick, ICollection<IGameEvent> events)
         {
             GameSpeed = 1f;
+            // Every hero goes back to adventure mode below, so every battle ring shuts as leaving battle shuts it (left
+            // open, its arrows kept marking only and the move button did nothing, holding the reset leader still).
+            foreach (var ring in rings.Values)
+            {
+                ring.Open = false;
+                ring.ShowMove = false;
+                ring.ShowAttack = false;
+                ring.NoOneReady = false;
+            }
+
             foreach (var hero in heroes)
             {
                 var def = hero.Definition;

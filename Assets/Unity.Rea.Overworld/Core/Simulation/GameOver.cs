@@ -110,7 +110,7 @@ namespace MindAttic.Overworld.Core
             pickups?.RestoreAllPickedUp();
             if (inventory != null)
             {
-                inventory.Inventory.Clear();
+                inventory.ClearPack();
                 foreach (var p in game.Players) inventory.SetOpen(p, false, tick, events);
             }
 

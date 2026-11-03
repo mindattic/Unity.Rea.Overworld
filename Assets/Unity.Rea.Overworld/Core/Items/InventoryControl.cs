@@ -673,6 +673,20 @@ namespace MindAttic.Overworld.Core
         }
 
         /// <summary>
+        /// Root.Reset's items loop (<see cref="GameOver"/>): the pack is emptied, and every player's cursor goes back to
+        /// the first slot and its swap mark clears, so a cursor left past the end of the emptied pack never indexes it.
+        /// </summary>
+        internal void ClearPack()
+        {
+            Inventory.Clear();
+            foreach (var v in views.Values)
+            {
+                v.Cursor = 0;
+                v.Swapping = false;
+            }
+        }
+
+        /// <summary>
         /// actionPickup's use (bUseDown): see the class summary. <paramref name="click"/> is a press of the held button,
         /// which first moves the cursor to an icon the virtual mouse is over.
         /// </summary>

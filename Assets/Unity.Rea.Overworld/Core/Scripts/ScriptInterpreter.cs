@@ -690,7 +690,13 @@ namespace MindAttic.Overworld.Core
                     var n = Integer(p);
                     if (!add && (n < 0 || n > 23)) throw new ScriptException("An hour is 0 to 23.");
                     if (Clock == null) return;
-                    if (add) Clock.Advance(run.Player, TimeSpan.FromHours(n), run.Tick, run.Events);
+                    if (add)
+                    {
+                        // A move past the calendar's ends threw in the original's AddHours too: the script fails to run.
+                        if (n > (DateTime.MaxValue - Clock.Now).TotalHours || -(double)n > (Clock.Now - DateTime.MinValue).TotalHours)
+                            throw new ScriptException("The clock cannot move " + n + " hours.");
+                        Clock.Advance(run.Player, TimeSpan.FromHours(n), run.Tick, run.Events);
+                    }
                     else Clock.SetHour(run.Player, n, null, true, run.Tick, run.Events);
                     break;
                 }

@@ -215,10 +215,12 @@ namespace MindAttic.Overworld.Core
         {
             hero.DX = 0f;
             hero.DY = 0f;
-            var d = hero.Definition;
-            Animate(hero, now, d.DrawRate, SpritesFor(hero).Draw(hero.Facing), DrawFramesFor(hero));
-            if (hero.Frame < d.DrawFrames) return;
-            hero.Frame = random.Next(0, d.BattleFrames + 1);
+            // The hero's own frame counts (its sprite pack's, when it has one): a pack with fewer draw frames than the
+            // shared set would otherwise never reach the last one and draw for ever.
+            var drawFrames = DrawFramesFor(hero);
+            Animate(hero, now, hero.Definition.DrawRate, SpritesFor(hero).Draw(hero.Facing), drawFrames);
+            if (hero.Frame < drawFrames) return;
+            hero.Frame = random.Next(0, BattleFramesFor(hero) + 1);
             hero.State = HeroState.Battle;
         }
 
