@@ -78,7 +78,7 @@ namespace MindAttic.Overworld.Core
             if (weapon == null) return 0;
             var split = weapon.Slashing + weapon.Piercing + weapon.Blunt;
             if (!(split > 0f)) return Math.Max(1, (int)Math.Round(weapon.Rating, MidpointRounding.AwayFromZero));
-            var m = Classes.TryGetValue(targetClass, out var found) ? found : new ClassMultiplier(1f, 1f, 1f);
+            var m = targetClass != null && Classes.TryGetValue(targetClass, out var found) ? found : new ClassMultiplier(1f, 1f, 1f);
             var multiplier = (weapon.Slashing * m.Slashing + weapon.Piercing * m.Piercing + weapon.Blunt * m.Blunt) / split;
             return Math.Max(1, (int)Math.Round(weapon.Rating * multiplier, MidpointRounding.AwayFromZero));
         }

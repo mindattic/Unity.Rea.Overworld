@@ -306,7 +306,7 @@ namespace MindAttic.Overworld.Core
                         case 't': builder.Append('\t'); break;
                         case 'u':
                             if (_at + 4 > _text.Length ||
-                                !int.TryParse(_text.Substring(_at, 4), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var code))
+                                !int.TryParse(_text.Substring(_at, 4), NumberStyles.AllowHexSpecifier, CultureInfo.InvariantCulture, out var code))
                             {
                                 throw Error("a \\u escape needs four hex digits");
                             }
