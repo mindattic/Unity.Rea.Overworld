@@ -15,12 +15,17 @@
     Save a screenshot to this file once the world is drawn, then quit (implies -Wait).
 .PARAMETER Wait
     Wait for the player to exit and return its exit code.
+.PARAMETER Headless
+    Run with no window through ..\Unity.Shared\tools\Start-Headless.ps1 (Unity.Shared's --headless mode, U.OVW-T100):
+    muted, in the background, straight into play, and it waits for the MINDATTIC_HEADLESS_READY log line.
+    The player keeps running afterwards; stop it yourself.
 #>
 param(
     [switch]$Build,
     [switch]$Sound,
     [string]$Capture,
     [switch]$Wait,
+    [switch]$Headless,
     [Parameter(ValueFromRemainingArguments = $true)][string[]]$PlayerArgs
 )
 
@@ -38,6 +43,13 @@ if ($Build -or -not (Test-Path $exe)) {
         '-batchmode', '-projectPath', $root,
         '-executeMethod', 'MindAttic.Overworld.Editor.OverworldBuild.BuildPlayer', '-logFile', $buildLog))
     if ($p.ExitCode -ne 0 -or -not (Test-Path $exe)) { Write-Error "Player build failed; see $buildLog" }
+}
+
+if ($Headless) {
+    # U.OVW-T100: the shared launcher adds --headless -batchmode -nographics and the -logFile.
+    $hArgs = @(); if ($PlayerArgs) { $hArgs += $PlayerArgs }
+    & (Join-Path $root '..\Unity.Shared\tools\Start-Headless.ps1') -Exe $exe -LogFile $log -Wait @hArgs
+    exit $LASTEXITCODE
 }
 
 $arguments = @('-logFile', $log)

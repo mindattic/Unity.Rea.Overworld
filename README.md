@@ -121,3 +121,9 @@ normal launch afterwards has sound again.
 
 `play.ps1` (modelled on Unity.QuickDuel's) launches the player with `-muted` + `MINDATTIC_CLI_MUTED=1` by
 default; `-Sound` opts back in.
+
+`.\play.ps1 -Headless` runs the built player with no window for scripted testing (U.OVW-T100): it goes through
+`..\Unity.Shared\tools\Start-Headless.ps1` (`--headless -batchmode -nographics`: muted, in the background) and waits for the
+`MINDATTIC_HEADLESS_READY` line in `Logs/play.log`. The game has no main menu to skip (it boots straight into the world), so
+the game itself changes nothing; extra arguments such as `-overworld-hold right,run` pass through to the player. The player
+keeps running afterwards; stop it yourself. See Unity.Shared's README, "Headless mode".
