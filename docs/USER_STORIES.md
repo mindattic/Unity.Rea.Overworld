@@ -152,4 +152,5 @@ updated: 2026-10-23
 | U.OVW-T99 | 2026-11-06 | chore | closed | Standardize run.ps1/run.bat at repo root per the Unity.Rea.* convention (part of U.CHN-T112) | 68a318a |
 | U.OVW-T100 | 2026-11-06 | feature | closed | Adopt the shared off-by-default --headless launch mode (Unity.Shared) | c2b318f8ed3d170beb08b45eb1dd24595a3cbc1a |
 | U.OVW-T101 | 2026-11-10 | chore | closed | Crash recovery: commit the command-catalog sync (.agent/commands/*.md) and regenerated docs/USER_STORIES.md left uncommitted by the session crash | — |
-| U.OVW-T102 | 2026-11-10 | chore | open | Crash recovery: commit the command-catalog sync (.agent/commands/*.md) and regenerated docs/USER_STORIES.md left uncommitted by the session crash | — |
+| U.OVW-T102 | 2026-11-10 | chore | closed | Crash recovery: commit the command-catalog sync (.agent/commands/*.md) and regenerated docs/USER_STORIES.md left uncommitted by the session crash | — |
+| U.OVW-T103 | 2026-11-10 | chore | open | Crash recovery / fleet sync: commit the regenerated docs/USER_STORIES.md left uncommitted after other tickets closed elsewhere | — |
