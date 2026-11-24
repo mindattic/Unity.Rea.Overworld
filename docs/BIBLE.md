@@ -76,7 +76,7 @@ Tests/
 - **Built in code.** One near-empty scene; a bootstrap builds the world, camera, HUD and screens in code (UI Toolkit with a shared theme), generated from the data.
   No prefab or Inspector wiring the owner has to maintain.
 - **Modern Unity.** Unity 6000.4.3f1, URP behind a pipeline-agnostic layer, the Input System (the original's key, mouse and gamepad map as rebindable actions),
-  `com.mindattic.unity.shared` profiles for settings (replacing the registry key), `com.mindattic.capture` for the scripted-run screenshots.
+  `com.mindattic.unity.shared` profiles for settings (replacing the registry key), `com.mindattic.media.capture` for the scripted-run screenshots.
 - **Rendering.** A perspective camera at 45 degrees looking straight along the world's depth axis, world units as in the original (one unit per area tile, the
   hero 0.144), sprites as quads with alpha cutout (the magenta colour key becomes real transparency at import), draw order by Y as the original sorted, weather
   and clouds as depth-layered particle quads at their original depths. The 4:3 640 x 480 reference is kept as the base aspect; other aspects letterbox or extend the
