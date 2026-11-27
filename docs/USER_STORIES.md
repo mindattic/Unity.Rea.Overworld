@@ -155,3 +155,15 @@ updated: 2026-10-23
 | U.OVW-T102 | 2026-11-10 | chore | closed | Crash recovery: commit the command-catalog sync (.agent/commands/*.md) and regenerated docs/USER_STORIES.md left uncommitted by the session crash | — |
 | U.OVW-T103 | 2026-11-10 | chore | closed | Crash recovery / fleet sync: commit the regenerated docs/USER_STORIES.md left uncommitted after other tickets closed elsewhere | — |
 | U.OVW-T104 | 2026-11-17 | docs | closed | Update USER_STORIES.md | — |
+| U.OVW-T105 | 2026-11-24 | fix | open | Hunt Unity.Rea.Overworld for real bugs (rooms, input, saves, edge cases) against docs/RECONSTRUCTION.md and fix every confirmed one without changing gameplay (owner rule: fix bugs only); any fix too big for this session goes to its own fix task under Port bug fixes | — |
+| U.OVW-T106 | 2026-11-24 | chore | closed | Unity.Rea.Overworld docs name com.mindattic.media.capture | children done |
+| U.OVW-T107 | 2026-11-24 | docs | closed | Unity.Rea.Overworld docs/BIBLE.md (~79) names com.mindattic.media.capture for the scripted-run screenshots | 55e0983 |
+| U.OVW-T108 | 2026-11-26 | feature | open | Unity.Rea.Overworld: adopt (or confirm) the shared run menu over deploy-lib.ps1 Publish-Unity, run Redeploy, and confirm the Development (Debug) and Release Windows players land and start at R:\MindAttic\Apps\Unity.Rea.Overworld\Debug and \Release; repoint anything in the repo still naming an old build path. Outcome: both players exist under R: and launch | — |
+| U.OVW-T109 | 2026-11-27 | feature | open | Confirmed bugs fixed and a recorded Release play-through that matches the original | — |
+| U.OVW-T110 | 2026-11-27 | feature | open | Fix every confirmed bug without changing gameplay | — |
+| U.OVW-T111 | 2026-11-27 | feature | open | The deployed Release player played start to finish against RECONSTRUCTION | — |
+| U.OVW-T112 | 2026-11-27 | feature | open | Players deployed on R: and the owner sign-off | — |
+| U.OVW-T113 | 2026-11-27 | feature | open | Debug and Release players deploy to R:\MindAttic\Apps and launch | — |
+| U.OVW-T114 | 2026-11-27 | feature | open | The owner plays the Release player end to end | — |
+| U.OVW-T115 | 2026-11-27 | chore | open | Play the Release player from R:\MindAttic\Apps\Unity.Rea.Overworld\Release start to finish (walk the world, use items, run the quests, fight a battle, sleep) against docs/RECONSTRUCTION.md, record the run and its evidence in RECONSTRUCTION.md, and file a fix task under Port bug fixes for each gap | — |
+| U.OVW-T116 | 2026-11-27 | chore | open | OWNER ACTION, not for agents: play the Release player from R:\MindAttic\Apps\Unity.Rea.Overworld\Release end to end (walk the world, use items, run the quests, fight a battle, sleep) and sign off the faithful-port milestone, or file what is wrong | — |
